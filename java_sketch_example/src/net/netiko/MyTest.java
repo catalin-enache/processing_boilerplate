@@ -9,7 +9,7 @@ public class MyTest extends PApplet {
 
     public static void main(String args[]) {
         // full-screen mode can be activated via parameters to PApplets main method.
-        System.out.println("in main");
+        System.out.println("in mains");
         PApplet.main(new String[]{"net.netiko.MyTest"});
     }
 
