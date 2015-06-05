@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="51ad2fb3-8b74-42a0-8a39-e1ab0e718fa3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../libraries/netiko/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../libraries/netiko/.idea/workspace.xml" />
     </list>
     <ignored path="java_sketch_example.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -428,7 +427,13 @@
       <option name="project" value="LOCAL" />
       <updated>1433510664105</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="initial">
+      <created>1433510754602</created>
+      <option name="number" value="00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1433510754602</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
