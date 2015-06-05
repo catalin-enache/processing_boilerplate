@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="netiko:jar">
-    <output-path>$PROJECT_DIR$/library</output-path>
-    <root id="archive" name="netiko.jar">
-      <element id="module-output" name="netiko" />
-    </root>
-  </artifact>
-</component>
