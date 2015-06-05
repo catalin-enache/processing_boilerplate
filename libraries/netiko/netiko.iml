@@ -9,6 +9,15 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="library" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://C:/processing-2.2.1-windows64/processing-2.2.1/core/library" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://C:/processing-2.2.1-windows64/processing-2.2.1/core/library" recursive="false" />
+      </library>
+    </orderEntry>
   </component>
 </module>
