@@ -1,25 +1,20 @@
-import netiko.stage.Test;
 
-Test t = new Test(this);
+
+import netiko.stage.Stage;
+import netiko.stage.Point;
+
+Point p1;
+int x = 0;
 
 void setup() {
-  //t.setup();
-  noFill();
-  bezier(85, 20, 10, 10, 90, 90, 15, 80);
-  fill(255);
-  int steps = 4;
-  for (int i = 0; i <= steps; i++) {
-    float t = i / float(steps);
-    float x = bezierPoint(85, 10, 90, 15, t);
-    float y = bezierPoint(20, 10, 90, 80, t);
-    ellipse(x, y, 5, 5);
-  }
+  Stage.setup(this, P3D, 400, 400, color(255), color(0), color(0));
+  p1 = Stage.point(200, 200, 0, 2); 
 }
 
 void draw() {
-  if (mousePressed) {
-    t.draw();
-  } 
+  x += 1;
+  p1.move(x, 0, 0);
+  Stage.draw();
 }
 
 
