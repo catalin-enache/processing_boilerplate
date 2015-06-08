@@ -5,10 +5,12 @@ import netiko.stage.Point;
 
 Point p1;
 int n = 0;
-float rot = 0;
+float rotx = 0;
+float roty = 0;
 
 int w = 500;
 int h = 500;
+int z = 500;
 
 void setup() {
   /*
@@ -38,19 +40,27 @@ void draw() {
   */
   
   
-  background(204);
-  camera(w/2+0, h/2+0, (h/2.0) / tan(PI*20 / 180.0), w/2, h/2, 0.0, 0.0, 1.0, 0.0);
-  //camera();
+  background(255);
+  //camera(w/2+0, h/2+0, (h/2.0) / tan(PI*20 / 180.0), w/2, h/2, 0.0, 0.0, 1.0, 0.0);
+  camera();
   translate(w/2, h/2, 0);
   if (mousePressed) {
-    rot = PI/180 * mouseX;
+    rotx = PI/180 * (mouseX - width/2) / 5;
+    roty = PI/180 * (mouseY - height/2) / 5;
   }
-  rotateY(rot);
+  rotateY(rotx);
+  rotateX(-roty);
   
+  stroke(100);
   box(400);
-  line(-w/2, 0, w/2, 0, 0, 0);
+  //line(-w/2, 0, w/2, 0, 0, 0);
   
-  //line(0, 0, 40, 40, 0, 0);
+  stroke(255,0,0);
+  line(-w, 0, 0, w, 0, 0);
+  stroke(0,255,0);
+  line(0, -h, 0, 0, h, 0);
+  stroke(0,0,255);
+  line(0, 0, -z, 0, 0, z);
   
   
   
