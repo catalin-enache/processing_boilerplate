@@ -15,6 +15,9 @@ public class Stage  {
     protected static int pColor;
     protected static int sColor;
     protected static boolean isCartezian;
+    protected static float rotX = 0;
+    protected static float rotY = 0;
+    protected static float cPosZ = 30;
 
     protected static ArrayList<Drawable> drawables = new ArrayList<>();
 
@@ -29,6 +32,7 @@ public class Stage  {
         pColor = _pColor; // point color
         sColor = _sColor; // stroke color
         isCartezian = _isCartezian;
+
 
         if (renderer != "") {
             p.size(width, height, renderer);
@@ -88,15 +92,36 @@ public class Stage  {
 
     private static void start() {
         p.background(bgColor);
+
         if (isCartezian) {
             if (renderer == P3D) {
+                if (p.keyPressed) {
+                    if (p.key == 'w') {
+                        cPosZ += 0.2;
+                    } else if (p.key == 's') {
+                        cPosZ -= 0.2;
+                    }
+                    // set the camera
+                    p.camera(width/2F, height/2F, (height/2F) / p.tan(PI/180F * cPosZ), width/2F, height/2F, 0F, 0F, 1F, 0F); // PI*?
+                }
+                // move to the middle of stage
                 p.translate(width/2, height/2, 0);
             }
             else {
                 p.translate(width/2, height/2);
             }
-
         }
+
+        if (renderer == P3D) {
+            if (p.mousePressed && p.mouseButton == RIGHT) {
+                rotX = PI/180 * (p.mouseX - width/2) / 5;
+                rotY = PI/180 * (p.mouseY - height/2) / 5;
+            }
+            // apply any rotation
+            p.rotateY(rotX);
+            p.rotateX(-rotY);
+        }
+        // let the rest of objects draw their stuff in this new environment
     }
 
     private static void end() {
@@ -126,22 +151,20 @@ public class Stage  {
     }
 
     private static void drawCoords() {
-        /*
         p.pushStyle();
-        p.stroke(100);
 
-        p.pushMatrix();
-//        if (renderer == P3D) {
-//            p.translate(0, 0, -1);
-//        }
+        p.stroke(255, 0, 0); // x
         p.line(-width / 2, 0, width / 2, 0);
+        p.stroke(0, 255, 0); // y
         p.line(0, -height/2, 0, height/2);
         if (renderer == P3D) {
+            p.stroke(0, 0, 255); // z
             p.line(0, 0, -depth / 2, 0, 0, depth / 2);
-            p.camera(70.0F, 35.0F, 120.0F, 50.0F, 50.0F, 0.0F, 0.0F, 1.0F, 0.0F);
+            p.noFill();
+            p.stroke(100); // cube
+            p.box(width, height, depth);
         }
-        p.popMatrix();
+
         p.popStyle();
-        */
     }
 }
