@@ -52,18 +52,22 @@ void draw() {
   rotateX(-roty);
   
   stroke(100);
-  box(400);
+  box(w);
   //line(-w/2, 0, w/2, 0, 0, 0);
   
   stroke(255,0,0);
-  line(-w, 0, 0, w, 0, 0);
+  line(-w/2, 0, 0, w/2, 0, 0);
   stroke(0,255,0);
-  line(0, -h, 0, 0, h, 0);
+  line(0, -h/2, 0, 0, h/2, 0);
   stroke(0,0,255);
-  line(0, 0, -z, 0, 0, z);
+  line(0, 0, -z/2, 0, 0, z/2);
   
   
-  
+  stroke(255, 102, 0);
+  line(30, 20, 80, 5);
+  line(80, 75, 30, 75);
+  stroke(0, 0, 0);
+  bezier(30, 20,  80, 5,  80, 75,  30, 75);
 
 }
 
