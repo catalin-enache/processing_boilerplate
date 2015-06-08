@@ -143,9 +143,9 @@ public class Stage  {
             int startRowPosition = i * width;
             int endRowPosition = width * (height - i - 1);
 
-            System.arraycopy(p.pixels, endRowPosition, tmp, 0, width); // save last row into tmp
-            System.arraycopy(p.pixels, startRowPosition, p.pixels, endRowPosition, width); // put first row into  last row
-            System.arraycopy(tmp, 0, p.pixels, startRowPosition, width); // put tmp row into  first row
+            System.arraycopy(p.pixels, endRowPosition, tmp, 0, width); // save end row into tmp
+            System.arraycopy(p.pixels, startRowPosition, p.pixels, endRowPosition, width); // put start row into  end row
+            System.arraycopy(tmp, 0, p.pixels, startRowPosition, width); // put tmp row into  start row
         }
         p.updatePixels();
     }
