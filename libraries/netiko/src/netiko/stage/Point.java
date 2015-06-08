@@ -11,7 +11,7 @@ public class Point implements Drawable {
 
     Point(int x, int y, int z, int r) {
         this.x = x; this.y = y; this.z = z; this.r = r;
-        this.color = Stage.getPColor();
+        this.color = Stage.getPointColor();
         this.renderer = Stage.getRenderer();
     }
 
