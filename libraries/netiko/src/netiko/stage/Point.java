@@ -5,7 +5,8 @@ import static processing.core.PConstants.*;
 
 public class Point implements Drawable {
 
-    public float x, y, z, r, color;
+    public float x, y, z, r;
+    public int color;
     protected PApplet p = Stage.getPApplet();
     protected String renderer;
 
@@ -21,7 +22,6 @@ public class Point implements Drawable {
         p.fill(color);
 
         p.pushMatrix();
-
         if (renderer == P3D) {
             p.translate(x, y, z);
         }
@@ -29,8 +29,19 @@ public class Point implements Drawable {
             p.translate(x, y);
         }
 
-        p.ellipseMode(RADIUS);
-        p.ellipse(0, 0, r, r);
+        if (renderer == P3D) {
+
+            p.noStroke();
+            p.sphere(r);
+
+        }
+        else {
+            p.ellipseMode(RADIUS);
+            p.ellipse(0, 0, r, r);
+        }
+
+        //p.ellipseMode(RADIUS);
+        //p.ellipse(0, 0, r, r);
 
         p.popMatrix();
         p.popStyle();
