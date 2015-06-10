@@ -22,6 +22,8 @@ public class Stage  {
     protected static ArrayList<IDrawable> drawables = new ArrayList<>();
 
     // usage:  Stage.startSetup(this, P3D, 800, 800, 800, 0XFFFFFFFF, 0XFF444444, color(255, 102, 0), true);
+    // hint(DISABLE_OPTIMIZED_STROKE); // might be used as default
+    // hint(DISABLE_DEPTH_TEST); // optional where needed
     public static void startSetup(PApplet _p, String _renderer, int _width, int _height, int _depth, int _bgColor, int _pColor, int _sColor, boolean _isCartezian) {
         p = _p; // PApplet
         renderer = _renderer; // what renderer to use
@@ -92,11 +94,12 @@ public class Stage  {
         // though not necessarily needed if DISABLE_DEPTH_TEST is on
         // yet it is still  needed because without it the strokes behind a transparent fill will not respect the order
         // and will be seen as they would have been drown on top of the fill (even if beyond it)
-        p.hint(DISABLE_OPTIMIZED_STROKE);
+        //p.hint(DISABLE_OPTIMIZED_STROKE);
         // DISABLE_DEPTH_TEST helps in transparency issues (when transparency seems to be ignored)
         // better results in combination with DISABLE_OPTIMIZED_STROKE
+        // though overlapping fills do not respect z buffer
         // http://processingjs.org/reference/hint_/
-        p.hint(DISABLE_DEPTH_TEST);
+        //p.hint(DISABLE_DEPTH_TEST);
         if (renderer.equals(P3D)) {
             p.lights();
         }
