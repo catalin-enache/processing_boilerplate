@@ -19,7 +19,7 @@ public class Stage  {
     protected static float rotY = 0;
     protected static float cPosZ = 30;
 
-    protected static ArrayList<Drawable> drawables = new ArrayList<>();
+    protected static ArrayList<IDrawable> drawables = new ArrayList<>();
 
     // usage:  Stage.startSetup(this, P3D, 800, 800, 800, 0XFFFFFFFF, 0XFF444444, color(255, 102, 0), true);
     public static void startSetup(PApplet _p, String _renderer, int _width, int _height, int _depth, int _bgColor, int _pColor, int _sColor, boolean _isCartezian) {
@@ -143,7 +143,7 @@ public class Stage  {
     }
 
     private static void end() {
-        for (Drawable d : drawables) {
+        for (IDrawable d : drawables) {
             d.draw();
         }
 

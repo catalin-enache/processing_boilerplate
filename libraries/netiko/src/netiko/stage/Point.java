@@ -3,7 +3,7 @@ package netiko.stage;
 import processing.core.*;
 import static processing.core.PConstants.*;
 
-public class Point implements Drawable {
+public class Point implements IDrawable {
 
     public float x, y, z, r;
     public int color;
