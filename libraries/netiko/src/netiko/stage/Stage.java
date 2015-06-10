@@ -36,16 +36,12 @@ public class Stage  {
 
         isCartezian = _isCartezian;
 
-        if (renderer != "") {
+        if (!renderer.equals("")) {
             p.size(width, height, renderer);
         }
         else {
             p.size(width, height);
         }
-
-        p.smooth(8);
-        p.stroke(bgColor); // seems to help with antialiasing
-        p.strokeWeight(1);
 
         start();
     }
@@ -55,7 +51,6 @@ public class Stage  {
     }
 
     public static void startDraw() {
-
         start();
     }
 
@@ -90,6 +85,18 @@ public class Stage  {
     }
 
     private static void start() {
+        p.smooth(8);
+        p.stroke(bgColor); // seems to help with antialiasing
+        p.strokeWeight(1);
+        // DISABLE_OPTIMIZED_STROKE helps in transparency issues (when transparency seems to be ignored)
+        // though not necessarily needed if DISABLE_DEPTH_TEST is on
+        // yet it is still  needed because without it the strokes behind a transparent fill will not respect the order
+        // and will be seen as they would have been drown on top of the fill (even if beyond it)
+        p.hint(DISABLE_OPTIMIZED_STROKE);
+        // DISABLE_DEPTH_TEST helps in transparency issues (when transparency seems to be ignored)
+        // better results in combination with DISABLE_OPTIMIZED_STROKE
+        // http://processingjs.org/reference/hint_/
+        p.hint(DISABLE_DEPTH_TEST);
         if (renderer.equals(P3D)) {
             p.lights();
         }
@@ -128,19 +135,39 @@ public class Stage  {
                 p.rotateX(-rotY);
             }
         }
+
+        if (isCartezian) {
+            drawCoords(); //  put here in case of DISABLE_OPTIMIZED_STROKE is on and DISABLE_DEPTH_TEST is off so we still can see the coords as they are drown before anything
+        }
         // let the rest of objects draw their stuff in this new environment
     }
 
     private static void end() {
-        if (isCartezian) {
-            drawCoords();
-        }
         for (Drawable d : drawables) {
             d.draw();
         }
+
         if (isCartezian) {
             reverseSceneY();
         }
+    }
+
+    private static void drawCoords() {
+        p.pushStyle();
+
+        p.stroke(255, 0, 0, 120); // x
+        p.line(-width / 2, 0, width / 2, 0);
+        p.stroke(0, 255, 0, 120); // y
+        p.line(0, -height/2, 0, height/2);
+        if (renderer == P3D) {
+            p.stroke(0, 0, 255, 120); // z
+            p.line(0, 0, -depth / 2, 0, 0, depth / 2);
+            p.noFill();
+            p.stroke(100); // cube
+            p.box(width, height, depth);
+        }
+
+        p.popStyle();
     }
 
     private static void reverseSceneY() {
@@ -157,21 +184,4 @@ public class Stage  {
         p.updatePixels();
     }
 
-    private static void drawCoords() {
-        p.pushStyle();
-
-        p.stroke(255, 0, 0); // x
-        p.line(-width / 2, 0, width / 2, 0);
-        p.stroke(0, 255, 0); // y
-        p.line(0, -height/2, 0, height/2);
-        if (renderer == P3D) {
-            p.stroke(0, 0, 255); // z
-            p.line(0, 0, -depth / 2, 0, 0, depth / 2);
-            p.noFill();
-            p.stroke(100); // cube
-            p.box(width, height, depth);
-        }
-
-        p.popStyle();
-    }
 }
