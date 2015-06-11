@@ -1,5 +1,5 @@
 package netiko.stage;
 
 public interface IPointInFigure {
-    public boolean isPointInFigure(int x, int y);
+    public boolean isPointInFigure(float mx, float my);
 }

@@ -30,20 +30,16 @@ public class Point implements IDrawable {
         }
 
         if (renderer == P3D) {
-
             p.noStroke();
             p.sphere(r);
-
         }
         else {
             p.ellipseMode(RADIUS);
             p.ellipse(0, 0, r, r);
         }
 
-        //p.ellipseMode(RADIUS);
-        //p.ellipse(0, 0, r, r);
-
         p.popMatrix();
         p.popStyle();
     }
+
 }

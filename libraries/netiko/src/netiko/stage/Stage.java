@@ -66,6 +66,12 @@ public class Stage  {
         return newPoint;
     }
 
+    public static PointDraggable pointDraggable(int x, int y, int z, int r) {
+        PointDraggable newPointDraggable =  new PointDraggable(x, y, z, r);
+        drawables.add(newPointDraggable);
+        return newPointDraggable;
+    }
+
     public static PApplet getPApplet() {
         return p;
     }
@@ -84,6 +90,19 @@ public class Stage  {
 
     public static int getStrokeColor() {
         return sColor;
+    }
+
+    public static float[] getTranslatedMouse() {
+        if (isCartezian) {
+            return new float[]{p.mouseX - width/2, -(p.mouseY - height/2)};
+        }
+        return new float[]{p.mouseX, p.mouseY};
+    }
+
+    private static void resetView () {
+        cPosZ = 30;
+        rotX = 0;
+        rotY = 0;
     }
 
     private static void start() {
@@ -113,6 +132,8 @@ public class Stage  {
                         cPosZ += 0.2;
                     } else if (p.key == 's') {
                         cPosZ -= 0.2;
+                    } else if (p.key == 'r') {
+                        resetView();
                     }
                     // set the camera
                     p.camera(width/2F, height/2F, (height/2F) / p.tan(PI/180F * cPosZ), width/2F, height/2F, 0F, 0F, 1F, 0F); // PI*?
@@ -186,5 +207,6 @@ public class Stage  {
         }
         p.updatePixels();
     }
+
 
 }

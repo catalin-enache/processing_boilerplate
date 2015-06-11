@@ -2,8 +2,9 @@
 
 import netiko.stage.Stage;
 import netiko.stage.Point;
+import netiko.stage.PointDraggable;
 
-Point p1;
+PointDraggable p1;
 int n = 0;
 float rotx = 0;
 float roty = 0;
@@ -15,10 +16,10 @@ int z = 500;
 
 void setup() {
   Stage.startSetup(this, P3D, 800, 800, 800, 0XFFFFFFFF, 0X99444444, color(255, 102, 0), true);
-  hint(DISABLE_OPTIMIZED_STROKE);
+  //hint(DISABLE_OPTIMIZED_STROKE);
   //hint(DISABLE_DEPTH_TEST);
   
-  p1 = Stage.point(0, 0, 0, 10); 
+  p1 = Stage.pointDraggable(0, 0, 0, 10); 
   
   Stage.endSetup();
 }
@@ -26,13 +27,16 @@ void setup() {
 void draw() {
   Stage.startDraw();
   
+  if (mousePressed && mouseButton == LEFT) {
+    //println(p1.isPointInFigure());
+  }
   
   n += 1;
   //p1.z = -n;
   //p1.x = n;
   //p1.y = n;
   
-  
+  /*
   pushStyle();
   pushMatrix();
   stroke(color(255, 102, 0, 255));
@@ -46,7 +50,7 @@ void draw() {
   bezier(30, 20, -50, 80, 5, -50, 80, 75, 50, 30, 75, 50);
   popMatrix();  
   popStyle();
-  
+  */
   Stage.endDraw();
   
 }
