@@ -36,12 +36,9 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
     protected void drag() {
         float mxy[] = Stage.getTranslatedMouse();
         if (p.mousePressed && p.mouseButton == LEFT && isPointInFigure(mxy[0], mxy[1]) && !dragStarted) {
-
             dragStarted = true;
             offset = getOffset(mxy[0], mxy[1]);
-            System.out.println(offset[0] + " | " + offset[1]);
         } else if (!p.mousePressed && dragStarted) {
-            System.out.println("drag stopped");
             dragStarted = false;
             offset[0] = 0;
             offset[1] = 0;
