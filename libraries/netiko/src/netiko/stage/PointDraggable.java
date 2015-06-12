@@ -6,9 +6,9 @@ import static processing.core.PConstants.*;
 
 public class PointDraggable extends AbstractDraggable {
 
-    protected Point point;
+    public Point point;
 
-    PointDraggable(int x, int y, int z, int r) {
+    PointDraggable(float x, float y, float z, float r) {
         super(new Point(x, y, z, r));
         point = (Point)drawable;
         setOffsetPointReference(point);
@@ -20,5 +20,10 @@ public class PointDraggable extends AbstractDraggable {
         float pxrange[] = new float[]{point.x - point.r, point.x + point.r};
         float pyrange[] = new float[]{point.y - point.r, point.y + point.r};
         return pxrange[0] < mx && mx < pxrange[1] && pyrange[0] < my && my < pyrange[1] ;
+    }
+
+    @Override
+    public String toString() {
+        return point.toString();
     }
 }

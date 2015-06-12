@@ -6,22 +6,22 @@ import static processing.core.PConstants.*;
 public class Point implements IDrawable {
 
     public float x, y, z, r;
-    public int color;
+    public int color = Stage.getPointColor();
     protected PApplet p = Stage.getPApplet();
-    protected String renderer;
+    protected String renderer = Stage.getRenderer();
 
-    Point(int x, int y, int z, int r) {
+    protected final Event.Name[] eventNamesRegisteredFor = new Event.Name[]{};
+
+    Point(float x, float y, float z, float r) {
         this.x = x; this.y = y; this.z = z; this.r = r;
-        this.color = Stage.getPointColor();
-        this.renderer = Stage.getRenderer();
     }
 
     public void draw() {
         p.pushStyle();
+        p.pushMatrix();
 
         p.fill(color);
 
-        p.pushMatrix();
         if (renderer == P3D) {
             p.translate(x, y, z);
         }
@@ -40,6 +40,21 @@ public class Point implements IDrawable {
 
         p.popMatrix();
         p.popStyle();
+    }
+
+    @Override
+    public Event.Name[] registerForEvents() {
+        return eventNamesRegisteredFor;
+    }
+
+    @Override
+    public void onEvent(Event evt) {
+
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Point: %.2f %.2f, %.2f, %.2f", x, y, z, r);
     }
 
 }

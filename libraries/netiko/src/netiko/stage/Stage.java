@@ -3,6 +3,7 @@ package netiko.stage;
 import processing.core.*;
 import static processing.core.PConstants.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Stage  {
 
@@ -19,11 +20,14 @@ public class Stage  {
     protected static float rotY = 0;
     protected static float cPosZ = 30;
 
-    protected static ArrayList<IDrawable> drawables = new ArrayList<>();
+    protected static boolean mousePressed = false;
 
-    // usage:  Stage.startSetup(this, P3D, 800, 800, 800, 0XFFFFFFFF, 0XFF444444, color(255, 102, 0), true);
-    // hint(DISABLE_OPTIMIZED_STROKE); // might be used as default
-    // hint(DISABLE_DEPTH_TEST); // optional where needed
+    protected static ArrayList<IDrawable> drawables = new ArrayList<>();
+    /*
+    usage:  Stage.startSetup(this, P3D, 800, 800, 800, 0XFFFFFFFF, 0XFF444444, color(255, 102, 0), true);
+    hint(DISABLE_OPTIMIZED_STROKE); // might be used as default
+    hint(DISABLE_DEPTH_TEST); // optional where needed
+    */
     public static void startSetup(PApplet _p, String _renderer, int _width, int _height, int _depth, int _bgColor, int _pColor, int _sColor, boolean _isCartezian) {
         p = _p; // PApplet
         renderer = _renderer; // what renderer to use
@@ -60,16 +64,22 @@ public class Stage  {
         end();
     }
 
-    public static Point point(int x, int y, int z, int r) {
+    public static Point point(float x, float y, float z, float r) {
         Point newPoint =  new Point(x, y, z, r);
         drawables.add(newPoint);
         return newPoint;
     }
 
-    public static PointDraggable pointDraggable(int x, int y, int z, int r) {
+    public static PointDraggable pointDraggable(float x, float y, float z, float r) {
         PointDraggable newPointDraggable =  new PointDraggable(x, y, z, r);
         drawables.add(newPointDraggable);
         return newPointDraggable;
+    }
+
+    public static Shape shape(int bgColor, int sColor, Integer beginShape, Integer endShape, boolean showPoints, ArrayList<ShapeData> shapeData) {
+        Shape newShape =  new Shape(bgColor, sColor, beginShape, endShape, showPoints, shapeData);
+        drawables.add(newShape);
+        return newShape;
     }
 
     public static PApplet getPApplet() {
@@ -163,6 +173,8 @@ public class Stage  {
         if (isCartezian) {
             drawCoords(); //  put here in case of DISABLE_OPTIMIZED_STROKE is on and DISABLE_DEPTH_TEST is off so we still can see the coords as they are drown before anything
         }
+
+        emitStageEvent();
         // let the rest of objects draw their stuff in this new environment
     }
 
@@ -206,6 +218,37 @@ public class Stage  {
             System.arraycopy(tmp, 0, p.pixels, startRowPosition, width); // put tmp row into  start row
         }
         p.updatePixels();
+    }
+
+    protected static void emitStageEvent() {
+        Event evt = null;
+        HashMap<String, Object> evtData = null;
+
+        if (!mousePressed && p.mousePressed) {
+            mousePressed = true;
+            evtData = new HashMap<>();
+            evt = new Event(Event.Name.mousePressed, evtData);
+        } else if (mousePressed && !p.mousePressed) {
+            mousePressed = false;
+            evtData = new HashMap<>();
+            evt = new Event(Event.Name.mouseReleased, evtData);
+        }
+
+        emitEvent(evt);
+    }
+
+    public static void emitEvent(Event evt) {
+        if (evt == null) {
+            return;
+        }
+        for (IStageEventClient d : drawables) {
+            Event.Name[] eventNameRegistered = d.registerForEvents();
+            for (int i = 0; i < eventNameRegistered.length; i++) {
+                if (eventNameRegistered[i] == evt.name) {
+                    d.onEvent(evt);
+                }
+            }
+        }
     }
 
 

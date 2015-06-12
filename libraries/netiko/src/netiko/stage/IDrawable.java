@@ -1,5 +1,5 @@
 package netiko.stage;
 
-interface IDrawable {
+interface IDrawable extends IStageEventClient {
     public void draw();
 }

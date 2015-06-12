@@ -1,10 +1,15 @@
 
-
+import java.util.ArrayList;
 import netiko.stage.Stage;
 import netiko.stage.Point;
 import netiko.stage.PointDraggable;
+import netiko.stage.Shape;
+import netiko.stage.ShapeData;
+import netiko.stage.ShapeDataVertex;
 
 PointDraggable p1;
+Shape s1;
+
 int n = 0;
 float rotx = 0;
 float roty = 0;
@@ -15,21 +20,23 @@ int z = 500;
 
 
 void setup() {
-  Stage.startSetup(this, P2D, 800, 800, 800, 0XFFFFFFFF, 0X99444444, color(255, 102, 0), true);
-  //hint(DISABLE_OPTIMIZED_STROKE);
+  Stage.startSetup(this, P3D, 800, 800, 800, 0XFFFFFFFF, 0X99444444, color(255, 102, 0), true);
+  hint(DISABLE_OPTIMIZED_STROKE);
   //hint(DISABLE_DEPTH_TEST);
   
-  p1 = Stage.pointDraggable(0, 0, 0, 10); 
+  p1 = Stage.pointDraggable(0, 0, 0, 10);
+  
+  ArrayList<ShapeData> s1_data = new ArrayList();
+  s1_data.add(new ShapeDataVertex(0, 0, 0));
+  s1_data.add(new ShapeDataVertex(50, 50, 0));
+  s1_data.add(new ShapeDataVertex(0, 100, 0));
+  s1 = Stage.shape(150, color(100, 0, 0), null, null, true,  s1_data);
   
   Stage.endSetup();
 }
 
 void draw() {
   Stage.startDraw();
-  
-  if (mousePressed && mouseButton == LEFT) {
-    //println(p1.isPointInFigure());
-  }
   
   n += 1;
   //p1.z = -n;
@@ -51,6 +58,21 @@ void draw() {
   popMatrix();  
   popStyle();
   */
+  
+  /*
+  beginShape();
+  pushStyle();
+  pushMatrix();
+  fill(10);
+  stroke(100, 0, 0);
+  vertex(5, 5, 0);
+  vertex(15, 35, 0);
+  vertex(15, 85, 0);
+  popMatrix();
+  popStyle();
+  endShape();
+  */
+
   Stage.endDraw();
   
 }
