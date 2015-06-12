@@ -30,7 +30,7 @@ void setup() {
   s1_data.add(new ShapeDataVertex(0, 0, 0));
   s1_data.add(new ShapeDataVertex(50, 50, 0));
   s1_data.add(new ShapeDataVertex(0, 100, 0));
-  s1 = Stage.shape(150, color(100, 0, 0), null, null, true,  s1_data);
+  s1 = Stage.shape(color(150), color(100, 0, 0), null, null, true,  s1_data);
   
   Stage.endSetup();
 }
