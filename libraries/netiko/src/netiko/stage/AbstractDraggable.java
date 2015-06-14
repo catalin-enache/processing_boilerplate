@@ -17,7 +17,7 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
     protected Point offsetPointReference;
     protected Point[] figurePoints;
 
-    protected final Event.Name[] eventNamesRegisteredFor = new Event.Name[]{Event.Name.mousePressed, Event.Name.mouseReleased };
+    protected final Event.Name[] eventNamesRegisteredFor = new Event.Name[]{Event.Name.mousePressed, Event.Name.mouseReleased, Event.Name.mouseMove };
 
     AbstractDraggable(IDrawable _drawable) {
         drawable = _drawable;
@@ -54,6 +54,18 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
             dragStarted = false;
             offset[0] = 0;
             offset[1] = 0;
+        }
+        else if (evt.name == Event.Name.mouseMove) {
+            checkMouseHover();
+        }
+    }
+
+    protected void checkMouseHover() {
+        float mxy[] = Stage.getTranslatedMouse();
+        if (isPointInFigure(mxy[0], mxy[1])) {
+            Stage.setHoverState(true, this);
+        } else {
+            Stage.setHoverState(false, this);
         }
     }
 

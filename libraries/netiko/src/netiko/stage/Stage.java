@@ -20,7 +20,11 @@ public class Stage  {
     protected static float rotY = 0;
     protected static float cPosZ = 30;
 
+    protected static PImage cArrow;
+
     protected static boolean mousePressed = false;
+    protected static boolean mouseHoverOn = false;
+    protected static Object mouseHoverSetter = null;
 
     protected static ArrayList<IDrawable> drawables = new ArrayList<>();
     /*
@@ -31,6 +35,8 @@ public class Stage  {
     public static void startSetup(PApplet _p, String _renderer, int _width, int _height, int _depth, int _bgColor, int _pColor, int _sColor, boolean _isCartezian) {
         p = _p; // PApplet
         renderer = _renderer; // what renderer to use
+
+        cArrow = p.loadImage(Stage.class.getResource("use32.gif").toString());
 
         width = _width; // stage width
         height = _height; // stage height
@@ -52,9 +58,7 @@ public class Stage  {
         start();
     }
 
-    public static void endSetup() {
-        end();
-    }
+    public static void endSetup() { end(); }
 
     public static void startDraw() {
         start();
@@ -63,6 +67,8 @@ public class Stage  {
     public static void endDraw() {
         end();
     }
+
+    // SECTION create and return objects
 
     public static Point point(float x, float y, float z, float r) {
         Point newPoint =  new Point(x, y, z, r);
@@ -81,6 +87,8 @@ public class Stage  {
         drawables.add(newShape);
         return newShape;
     }
+
+    // SECTION get stuff
 
     public static PApplet getPApplet() {
         return p;
@@ -102,12 +110,34 @@ public class Stage  {
         return sColor;
     }
 
+    // to be called after stage transformation was applied
     public static float[] getTranslatedMouse() {
+        float[] coords;
         if (isCartezian) {
-            return new float[]{p.mouseX - width/2, -(p.mouseY - height/2)};
+            coords = new float[]{p.mouseX - width/2, -(p.mouseY - height/2)};
+        } else {
+            coords = new float[]{p.mouseX, p.mouseY};
         }
-        return new float[]{p.mouseX, p.mouseY};
+        //System.out.println(coords[0] + " | " + coords[1]);
+        //System.out.println((p.modelX(p.mouseX - width/2, p.mouseY - height/2, 0) - width/2) + " || " + (-(p.modelY(p.mouseX - width/2, p.mouseY - height/2, 0) - height/2)));
+        return coords;
     }
+
+    // SECTION set stuff
+
+    public static void setHoverState(boolean on, Object setter) {
+        if (on && setter != mouseHoverSetter) {
+            mouseHoverOn = true;
+            mouseHoverSetter = setter;
+            p.cursor(HAND);
+        } else if (!on && setter == mouseHoverSetter) {
+            mouseHoverOn = false;
+            mouseHoverSetter = null;
+            p.cursor(ARROW);
+        }
+    }
+
+    // SECTION internal stage stuff
 
     private static void resetView () {
         cPosZ = 30;
@@ -183,9 +213,23 @@ public class Stage  {
             d.draw();
         }
 
+        drawCursor();
+
         if (isCartezian) {
             reverseSceneY();
         }
+    }
+
+    private static void drawCursor() {
+        float[] xyz = getTranslatedMouse();
+        //p.ellipse(xyz[0], xyz[1], 5, 5);
+        p.hint(DISABLE_DEPTH_TEST);
+        p.image(cArrow, xyz[0], xyz[1]);
+        p.hint(ENABLE_DEPTH_TEST);
+
+        //p.printMatrix();
+        PMatrix3D pMatrix = (PMatrix3D)p.getMatrix();
+        pMatrix.print();
     }
 
     private static void drawCoords() {
@@ -220,18 +264,20 @@ public class Stage  {
         p.updatePixels();
     }
 
+    // section emit events
+
     protected static void emitStageEvent() {
         Event evt = null;
         HashMap<String, Object> evtData = null;
 
         if (!mousePressed && p.mousePressed) {
             mousePressed = true;
-            evtData = new HashMap<>();
             evt = new Event(Event.Name.mousePressed, evtData);
         } else if (mousePressed && !p.mousePressed) {
             mousePressed = false;
-            evtData = new HashMap<>();
             evt = new Event(Event.Name.mouseReleased, evtData);
+        } else {
+            evt = new Event(Event.Name.mouseMove, evtData);
         }
 
         emitEvent(evt);
@@ -250,6 +296,8 @@ public class Stage  {
             }
         }
     }
+
+
 
 
 }
