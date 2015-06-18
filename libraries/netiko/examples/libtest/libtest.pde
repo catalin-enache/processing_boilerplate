@@ -20,7 +20,7 @@ int z = 500;
 
 
 void setup() {
-  Stage.startSetup(this, P3D, 800, 800, 800, 0XFFFFFFFF, 0X99444444, color(255, 102, 0), true);
+  Stage.startSetup(this, P3D, 800, 800, 800, 0XFFFFFFFF, 0X99444444, color(255, 102, 0), false);
   hint(DISABLE_OPTIMIZED_STROKE);
   //hint(DISABLE_DEPTH_TEST);
   

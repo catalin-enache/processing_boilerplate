@@ -1,9 +1,15 @@
 package netiko.stage;
 
 import processing.core.*;
+
+
 import static processing.core.PConstants.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.media.opengl.*;
+import javax.media.opengl.glu.*;
+import processing.opengl.*;
 
 public class Stage  {
 
@@ -27,6 +33,11 @@ public class Stage  {
     protected static Object mouseHoverSetter = null;
 
     protected static ArrayList<IDrawable> drawables = new ArrayList<>();
+
+    //protected static GL gl; // TODO ??
+    //protected static GLU glu; // TODO ??
+    protected static Selection_in_P3D_OPENGL_A3D helper;
+
     /*
     usage:  Stage.startSetup(this, P3D, 800, 800, 800, 0XFFFFFFFF, 0XFF444444, color(255, 102, 0), true);
     hint(DISABLE_OPTIMIZED_STROKE); // might be used as default
@@ -48,6 +59,10 @@ public class Stage  {
 
         isCartezian = _isCartezian;
 
+        //gl=((PGraphicsOpenGL)p.g).gl;
+        //glu=((PGraphicsOpenGL)p.g).glu;
+        helper = new Selection_in_P3D_OPENGL_A3D(p);
+
         if (!renderer.equals("")) {
             p.size(width, height, renderer);
         }
@@ -56,6 +71,7 @@ public class Stage  {
         }
 
         start();
+
     }
 
     public static void endSetup() { end(); }
@@ -118,8 +134,6 @@ public class Stage  {
         } else {
             coords = new float[]{p.mouseX, p.mouseY};
         }
-        //System.out.println(coords[0] + " | " + coords[1]);
-        //System.out.println((p.modelX(p.mouseX - width/2, p.mouseY - height/2, 0) - width/2) + " || " + (-(p.modelY(p.mouseX - width/2, p.mouseY - height/2, 0) - height/2)));
         return coords;
     }
 
@@ -163,7 +177,7 @@ public class Stage  {
             p.lights();
         }
 
-        p.background(bgColor);
+
 
         if (isCartezian) {
             if (renderer.equals(P3D)) {
@@ -200,6 +214,10 @@ public class Stage  {
             }
         }
 
+        helper.captureViewMatrix((PGraphics3D)p.g);
+
+        p.background(bgColor);
+
         if (isCartezian) {
             drawCoords(); //  put here in case of DISABLE_OPTIMIZED_STROKE is on and DISABLE_DEPTH_TEST is off so we still can see the coords as they are drown before anything
         }
@@ -227,9 +245,25 @@ public class Stage  {
         p.image(cArrow, xyz[0], xyz[1]);
         p.hint(ENABLE_DEPTH_TEST);
 
+        //System.out.println(coords[0] + " | " + coords[1]);
+        //System.out.println((p.modelX(p.mouseX - width/2, p.mouseY - height/2, 0) - width/2) + " || " + (-(p.modelY(p.mouseX - width/2, p.mouseY - height/2, 0) - height/2)));
+
+
         //p.printMatrix();
+        helper.calculatePickPoints(xyz[0], xyz[1]);
+        p.println(helper.ptStartPos);
+        p.println(helper.ptEndPos);
+
+        /*
         PMatrix3D pMatrix = (PMatrix3D)p.getMatrix();
-        pMatrix.print();
+        pMatrix.invert();
+        PVector mouseCoords = new PVector(p.mouseX, p.mouseY, 0);
+        //PVector mouseCoords = new PVector(xyz[0], xyz[1], 0);
+        PVector mouseTranslated = pMatrix.mult(mouseCoords, null);
+        p.println((mouseTranslated.x - width/2) + ", " + -(mouseTranslated.y - height/2) + ", " + (mouseTranslated.z));
+        //pMatrix.print();
+        //float[] translatedCoords = multiply_vec4_with_m4_4(new float[p.mouseX, p.mouseY, 1F], );
+        */
     }
 
     private static void drawCoords() {
@@ -296,8 +330,179 @@ public class Stage  {
             }
         }
     }
+    /*
+    private float[] multiply_vec4_with_m4_4(float[] vec4, float[][] m4_4)
+    {
+        float transformedX, transformedY, transformedZ;
 
+        transformedX =  vec4[0] * m4_4[0][0] + vec4[1] * m4_4[1][0] + vec4[2] * m4_4[2][0] + m4_4[3][0];
+        transformedY =  vec4[0] * m4_4[0][1] + vec4[1] * m4_4[1][1] + vec4[2] * m4_4[2][1] + m4_4[3][1];
+        transformedZ =  vec4[0] * m4_4[0][2] + vec4[1] * m4_4[1][2] + vec4[2] * m4_4[2][2] + m4_4[3][2];
+
+        return new float[]{transformedX, transformedY, transformedZ, 1F};
+    }
+
+    private float[] multiply_vec3_with_m3_3(float[] vec3, float[][] m3_3)
+    {
+        float transformedX, transformedY;
+
+        transformedX =  vec3[0] * m3_3[0][0] + vec3[1] * m3_3[1][0] + m3_3[2][0];
+        transformedY =  vec3[0] * m3_3[0][1] + vec3[1] * m3_3[1][1] + m3_3[2][1];
+
+
+        return new float[]{transformedX, transformedY, 1F};
+
+    }
+    */
 
 
 
 }
+
+// http://andrewmarsh.com/blog/2011/12/04/gluunproject-p3d-and-opengl-sketches
+class Selection_in_P3D_OPENGL_A3D {
+
+
+    private boolean m_bValid = false;
+    private int[] m_aiViewport = new int[4];
+    // Store the near and far ray positions.
+    public PVector ptStartPos = new PVector();
+    public PVector ptEndPos = new PVector();
+    private PMatrix3D m_pMatrix = new PMatrix3D();
+
+    private PApplet p;
+
+    Selection_in_P3D_OPENGL_A3D (PApplet p) {
+        this.p = p;
+    }
+
+    //Maintain own projection matrix.
+    public PMatrix3D getMatrix() { return m_pMatrix; }
+
+    // Maintain own viewport data.
+    public int[] getViewport() { return m_aiViewport; }
+
+    //True if near and far points calculated.
+    public boolean isValid() { return m_bValid; }
+
+    public void captureViewMatrix(PGraphics3D g3d) {
+    // Call this to capture the selection matrix after
+    // you have called perspective() or ortho() and applied your
+    // pan, zoom and camera angles - but before you start drawing
+    // or playing with the matrices any further.
+        if (g3d == null) {
+            // Use main canvas if it is P3D, OPENGL or A3D.
+            g3d = (PGraphics3D)p.g;
+        }
+        if (g3d != null) {
+                // Check for a valid 3D canvas.
+                // Capture current projection matrix.
+                m_pMatrix.set(g3d.projection);
+                // Multiply by current modelview matrix.
+                m_pMatrix.apply(g3d.modelview);
+                // Invert the resultant matrix.
+                m_pMatrix.invert();
+                // Store the viewport.
+                m_aiViewport[0] = 0;
+                m_aiViewport[1] = 0;
+                m_aiViewport[2] = g3d.width;
+                m_aiViewport[3] = g3d.height;
+        }
+    }
+
+    public boolean gluUnProject(float winx, float winy, float winz, PVector result) {
+        float[] in = new float[4];
+        float[] out = new float[4];
+        // Transform to normalized screen coordinates (-1 to 1).
+        in[0] = ((winx - (float)m_aiViewport[0]) / (float)m_aiViewport[2]) * 2.0f - 1.0f;
+        in[1] = ((winy - (float)m_aiViewport[1]) / (float) m_aiViewport[3]) * 2.0f - 1.0f;
+        in[2] = p.constrain(winz, 0f, 1f) * 2.0f - 1.0f; in[3] = 1.0f;
+        // Calculate homogeneous coordinates.
+        out[0] = m_pMatrix.m00 * in[0] + m_pMatrix.m01 * in[1] + m_pMatrix.m02 * in[2] + m_pMatrix.m03 * in[3];
+        out[1] = m_pMatrix.m10 * in[0] + m_pMatrix.m11 * in[1] + m_pMatrix.m12 * in[2] + m_pMatrix.m13 * in[3];
+        out[2] = m_pMatrix.m20 * in[0] + m_pMatrix.m21 * in[1] + m_pMatrix.m22 * in[2] + m_pMatrix.m23 * in[3];
+        out[3] = m_pMatrix.m30 * in[0] + m_pMatrix.m31 * in[1] + m_pMatrix.m32 * in[2] + m_pMatrix.m33 * in[3];
+        if (out[3] == 0.0f) {
+            // Check for an invalid result.
+            result.x = 0.0f;
+            result.y = 0.0f;
+            result.z = 0.0f;
+            return false;
+        }
+        // Scale to world coordinates.
+        out[3] = 1.0f / out[3];
+        result.x = out[0] * out[3];
+        result.y = out[1] * out[3];
+        result.z = out[2] * out[3];
+        return true;
+    }
+    public boolean calculatePickPoints(float x, float y) {
+        // Calculate positions on the near and far 3D frustum planes.
+        m_bValid = true;
+        // Have to do both in order to reset PVector on error.
+        if (!gluUnProject((float)x, (float)y, 0.0f, ptStartPos)) m_bValid = false;
+        if (!gluUnProject((float)x, (float)y, 1.0f, ptEndPos)) m_bValid = false;
+        return m_bValid;
+    }
+}
+
+/*
+class Selection_in_OPENGL_A3D_Only {
+    // Need to know Left/Right elevations.
+    public static final int VIEW_Persp = 0;
+    public static final int VIEW_Axon = 1;
+    public static final int VIEW_Plan = 2;
+    public static final int VIEW_Front = 3;
+    public static final int VIEW_Right = 4;
+    public static final int VIEW_Rear = 5;
+    public static final int VIEW_Left = 6;
+    // Store the near and far ray positions.
+    public PVector ptStartPos = new PVector();
+    public PVector ptEndPos = new PVector();
+    // Internal matrices and projection type.
+    protected int m_iProjection = VIEW_Persp;
+    protected double[] m_adModelview = new double[16];
+    protected double[] m_adProjection = new double[16];
+    protected int[] m_aiViewport = new int[4];
+
+    protected PApplet p;
+
+    Selection_in_OPENGL_A3D_Only (PApplet p) {
+        this.p = p;
+    }
+
+    public void captureViewMatrix(PGraphicsOpenGL pgl, int projection) {
+        // Call this to capture the selection matrix after
+        // you have called perspective() or ortho() and applied your
+        // pan, zoom and camera angles - but before you start drawing
+        // or playing with the matrices any further.
+        if (pgl != null) {
+            pgl.beginGL();
+            m_iProjection = projection;
+            pgl.gl.glGetDoublev(pgl.gl.GL_MODELVIEW_MATRIX, this.m_adModelview, 0);
+            pgl.gl.glGetDoublev(pgl.gl.GL_PROJECTION_MATRIX, this.m_adProjection, 0);
+            pgl.gl.glGetIntegerv(pgl.gl.GL_VIEWPORT, this.m_aiViewport, 0);
+            pgl.endGL();
+        }
+    }
+
+    public boolean calculatePickPoints(int x, int y, PGraphicsOpenGL pgl) {
+        // Calculate positions on the near and far 3D frustum planes.
+        if (pgl == null) {
+            // Use main canvas if it is OPENGL or A3D.
+            pgl = (PGraphicsOpenGL)p.g;
+        }
+        if (pgl != null) {
+            double[] out = new double[4];
+            pgl.glu.gluUnProject((double)x, (double)y, (double)0.0, this.m_adModelview, 0, this.m_adProjection, 0, this.m_aiViewport, 0, out, 0 );
+            ptStartPos.set((float)out[0], (float)out[1], (float)out[2]);
+            if ((m_iProjection != VIEW_Front) && (m_iProjection != VIEW_Rear)) ptStartPos.y = -ptStartPos.y;
+            pgl.glu.gluUnProject((double)x, (double)y, (double)1.0, this.m_adModelview, 0, this.m_adProjection, 0, this.m_aiViewport, 0, out, 0 );
+            ptEndPos.set((float)out[0], (float)out[1], (float)out[2]);
+            if ((m_iProjection != VIEW_Front) && (m_iProjection != VIEW_Rear)) ptEndPos.y = -ptEndPos.y;
+            return true;
+        }
+        return false;
+    }
+}
+*/
