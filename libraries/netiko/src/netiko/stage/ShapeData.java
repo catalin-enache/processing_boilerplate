@@ -3,7 +3,7 @@ package netiko.stage;
 import processing.core.*;
 
 public abstract class ShapeData  {
+    public float[] coords;
     protected final PApplet p = Stage.getPApplet();
-    protected final String renderer = Stage.getRenderer();
     public abstract String toString();
 }

@@ -3,8 +3,6 @@ package netiko.stage;
 
 import processing.core.PApplet;
 
-import java.util.HashMap;
-
 import static processing.core.PConstants.*;
 
 public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
@@ -17,7 +15,8 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
     protected Point offsetPointReference;
     protected Point[] figurePoints;
 
-    protected final Event.Name[] eventNamesRegisteredFor = new Event.Name[]{Event.Name.mousePressed, Event.Name.mouseReleased, Event.Name.mouseMove };
+    // registers for stage events
+    protected final Event.Name[] eventNamesRegisteredFor = new Event.Name[]{ Event.Name.mousePressed, Event.Name.mouseReleased, Event.Name.mouseMove };
 
     AbstractDraggable(IDrawable _drawable) {
         drawable = _drawable;
@@ -43,12 +42,11 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
     }
 
     @Override
-    public void onEvent(Event evt) {
+    public void onEvent(Event evt, Object emitter) {
         if (evt.name == Event.Name.mousePressed) {
-            float mxy[] = Stage.getTranslatedMouse();
-            if (p.mouseButton == LEFT && isPointInFigure(mxy[0], mxy[1])) {
+            if (p.mouseButton == LEFT && isPointInFigure(Stage.mouseX, Stage.mouseY)) {
                 dragStarted = true;
-                offset = getOffset(mxy[0], mxy[1]);
+                offset = getOffset(Stage.mouseX, Stage.mouseY);
             }
         } else if (evt.name == Event.Name.mouseReleased) {
             dragStarted = false;
@@ -61,8 +59,7 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
     }
 
     protected void checkMouseHover() {
-        float mxy[] = Stage.getTranslatedMouse();
-        if (isPointInFigure(mxy[0], mxy[1])) {
+        if (isPointInFigure(Stage.mouseX, Stage.mouseY)) {
             Stage.setHoverState(true, this);
         } else {
             Stage.setHoverState(false, this);
@@ -71,8 +68,7 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
 
     protected void drag() {
         if (dragStarted) {
-            float mxy[] = Stage.getTranslatedMouse();
-            followNewDirection(mxy[0], mxy[1]);
+            followNewDirection(Stage.mouseX, Stage.mouseY);
         }
     }
 
@@ -84,9 +80,7 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
         for (Point p : figurePoints) {
             p.x = x + offset[0];
             p.y = y + offset[1];
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("point", this);
-            Stage.emitEvent(new Event(Event.Name.pointUpdated, data));
+            Stage.emitEvent(new Event(Event.Name.pointUpdated, null), this);
         }
     }
 

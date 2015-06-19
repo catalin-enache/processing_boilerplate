@@ -7,7 +7,7 @@ import java.util.Map;
 public class Event {
     public Name name;
     public HashMap<String, Object> data;
-    public static enum Name { mousePressed, mouseReleased, mouseMove, pointUpdated}
+    public static enum Name { mousePressed, mouseReleased, mouseMove, pointUpdated }
     protected String selfAsString;
 
     Event(Name name, HashMap<String, Object> data) {
@@ -20,7 +20,7 @@ public class Event {
         String str = name + ": ";
         if (data != null) {
             for (Map.Entry<String, Object> entry : data.entrySet()) {
-                str = entry + "\n";
+                str += entry + ", ";
             }
         }
         return str + "\n";

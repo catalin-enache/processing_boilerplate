@@ -7,7 +7,6 @@ public class Shape implements IDrawable {
 
     protected ArrayList<ShapeData> instructions;
     protected PApplet p = Stage.getPApplet();
-    protected String renderer = Stage.getRenderer();
     protected int sColor;
     protected int bgColor;
     protected Integer beginShape = null;
@@ -16,16 +15,17 @@ public class Shape implements IDrawable {
     protected final float POINT_RADIUS = 3;
     protected ArrayList<ActionStore> shapesActionsStore = new ArrayList<>();
     protected ArrayList<PointDraggable> points = new ArrayList<>();
-    protected final Event.Name[] eventNamesRegisteredFor = new Event.Name[]{ Event.Name.pointUpdated };
+    // registers for self points events
+    protected final Event.Name[] eventNamesRegisteredFor = new Event.Name[]{Event.Name.pointUpdated};
 
     /*
     usage:
     Shape s1;
     ArrayList<ShapeData> s1_data = new ArrayList();
-    s1_data.add(new ShapeDataVertex(0, 0, 0));
-    s1_data.add(new ShapeDataVertex(50, 50, 0));
-    s1_data.add(new ShapeDataVertex(0, 100, 0));
-    s1 = Stage.shape(color(150), color(100, 0, 0), null, null, true,  s1_data);
+    s1_data.add(new ShapeDataVertex(0, 0));
+    s1_data.add(new ShapeDataVertex(50, 50));
+    s1_data.add(new ShapeDataVertex(0, 100));
+    s1 = Stage.shape(color(150, 100), color(100, 0), null, null, true,  s1_data);
     */
     Shape(int bgColor, int sColor, Integer beginShape, Integer endShape, boolean showPoints, ArrayList<ShapeData> instructions) {
         this.sColor = sColor;
@@ -71,16 +71,20 @@ public class Shape implements IDrawable {
     }
 
     @Override
-    public void onEvent(Event evt) {
+    public void onEvent(Event evt, Object emitter) {
+        System.out.println(emitter);
         if (evt.name == Event.Name.pointUpdated) {
-            PointDraggable whichPoint = (PointDraggable)evt.data.get("point");
+            if (!(emitter instanceof PointDraggable) ) {
+                return;
+            }
+            PointDraggable emitterPoint = (PointDraggable)emitter;
             int pointsNum = points.size();
             for  (int i = 0; i < pointsNum; i++) {
-                if (points.get(i) == whichPoint) {
-                    ShapeData instruction = instructions.get(i);
-                    if (instruction instanceof ShapeDataVertex) {
-                        float[] coords = ((ShapeDataVertex)instruction).coords;
-                        updateVertexCoords(whichPoint, coords);
+                if (points.get(i) == emitterPoint) {
+                    ShapeData emitterPointRelatedInstruction = instructions.get(i);
+                    if (emitterPointRelatedInstruction instanceof ShapeDataVertex) {
+                        float[] emitterPointRelatedInstructionCoords = ((ShapeDataVertex)emitterPointRelatedInstruction).coords;
+                        updateVertexCoords(emitterPoint, emitterPointRelatedInstructionCoords);
                     }
                 }
             }
@@ -98,9 +102,7 @@ public class Shape implements IDrawable {
     protected void updateVertexCoords(PointDraggable point, float[] coords) {
         switch (coords.length) {
             case 2:
-            case 3:
             case 4:
-            case 5:
                 coords[0] = point.point.x;
                 coords[1] = point.point.y;
                 break;
@@ -109,28 +111,19 @@ public class Shape implements IDrawable {
         }
     }
 
+    // also may add a point in points for vertex coords
     protected void registerVertexAction(final float[] coords) {
         switch (coords.length) {
-            case 1:
-                shapesActionsStore.add(new ActionStore() {void run() {p.vertex(coords);}});
-                // ?
-                break;
             case 2:
                 shapesActionsStore.add(new ActionStore() {void run() {p.vertex(coords[0], coords[1]);}});
-                if (showPoints) { points.add(Stage.pointDraggable(coords[0], coords[1], 0, POINT_RADIUS)); }
-                break;
-            case 3:
-                shapesActionsStore.add(new ActionStore() {void run() {p.vertex(coords[0], coords[1], coords[2]);}});
-                if (showPoints) { points.add(Stage.pointDraggable(coords[0], coords[1], coords[2], POINT_RADIUS)); }
+                if (showPoints) { points.add(Stage.pointDraggable(coords[0], coords[1],  POINT_RADIUS)); }
                 break;
             case 4:
                 shapesActionsStore.add(new ActionStore() {void run() {p.vertex(coords[0], coords[1], coords[2], coords[3]);}});
-                if (showPoints) { points.add(Stage.pointDraggable(coords[0], coords[1], 0, POINT_RADIUS)); }
+                if (showPoints) { points.add(Stage.pointDraggable(coords[0], coords[1], POINT_RADIUS)); }
                 break;
-            case 5:
-                shapesActionsStore.add(new ActionStore() {void run() {p.vertex(coords[0], coords[1], coords[2], coords[3], coords[4]);}});
-                if (showPoints) { points.add(Stage.pointDraggable(coords[0], coords[1], coords[2], POINT_RADIUS)); }
-                break;
+            default:
+                System.out.println("Current implementation of ShapeDataVertex accepts only 2 or 4 arguments");
         }
     }
 

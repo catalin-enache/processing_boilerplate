@@ -1,16 +1,15 @@
 package netiko.stage;
 
-
 import static processing.core.PConstants.*;
 
-
+// this class is a wrapper over a Point
 public class PointDraggable extends AbstractDraggable {
 
     public Point point;
 
-    PointDraggable(float x, float y, float z, float r) {
-        super(new Point(x, y, z, r));
-        point = (Point)drawable;
+    PointDraggable(float x, float y, float r) {
+        super(new Point(x, y, r));
+        point = (Point)drawable; // composition pattern
         setOffsetPointReference(point);
         setFigurePoints(new Point[]{point});
     }
