@@ -75,15 +75,7 @@ public class Stage  {
     }
 
     protected static void addDrawable(IDrawable client) {
-        for (Event.Name evtName: client.registerForEvents()) {
-            if (eventsRegister.containsKey(evtName)) {
-                eventsRegister.get(evtName).add(client);
-            } else {
-                HashSet<IStageEventClient> newSet = new HashSet<>();
-                newSet.add(client);
-                eventsRegister.put(evtName, newSet);
-            }
-        }
+        addEventClient(client);
         drawables.add(client);
     }
 
