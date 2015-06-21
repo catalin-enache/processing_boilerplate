@@ -1,19 +1,18 @@
 package netiko.stage;
 
-import static processing.core.PConstants.*;
+public class ShapeDataVertex extends AbstractShapeDataVertex {
 
-public class ShapeDataVertex extends ShapeData {
-
-    public ShapeDataVertex(float... coords) {
-        this.coords = coords;
-    }
-
-    @Override
-    public String toString() {
-        String str = "ShapeDataVertex:";
-        for (int i = 0; i < coords.length; i++) {
-            str = str + " " + coords[i];
+    public ShapeDataVertex(IPoint pointCoord, IPoint pointTexture) {
+        if (pointTexture != null) {
+            points = new IPoint[]{pointCoord, pointTexture};
+        } else {
+            points = new IPoint[]{pointCoord};
         }
-        return str;
     }
+
+    public ShapeDataVertex(IPoint pointCoord) {
+        this(pointCoord, null);
+    }
+
+
 }

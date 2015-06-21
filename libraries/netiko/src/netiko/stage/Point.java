@@ -3,23 +3,41 @@ package netiko.stage;
 import processing.core.*;
 import static processing.core.PConstants.*;
 
-public class Point implements IDrawable {
+public class Point extends PointVirtual implements IDrawable, IRadius {
 
-    public float x, y, r;
-    public int color = Stage.getPointColor();
+    public int bgColor = Stage.getPointColor();
+    public int strokeColor = Stage.getPointStrokeColor();
     protected PApplet p = Stage.getPApplet();
+
+    protected float r;
 
     protected final Event.Name[] eventNamesRegisteredFor = new Event.Name[]{};
 
     Point(float x, float y, float r) {
-        this.x = x; this.y = y; this.r = r;
+        super(x, y);
+        this.r = r;
+    }
+
+    Point(float x, float y) {
+        this(x, y, Stage.POINT_RADIUS);
+    }
+
+    @Override
+    public float r() {
+        return r;
+    }
+
+    @Override
+    public void r(float r) {
+        this.r = r;
     }
 
     public void draw() {
         p.pushStyle();
         p.pushMatrix();
 
-        p.fill(color);
+        p.stroke(strokeColor);
+        p.fill(bgColor);
 
         p.translate(x, y);
 
@@ -28,6 +46,14 @@ public class Point implements IDrawable {
 
         p.popMatrix();
         p.popStyle();
+    }
+
+    public void setBgColor(int color) {
+        bgColor = color;
+    }
+
+    public void resetBgColor() {
+        bgColor = Stage.getPointColor();
     }
 
     @Override
@@ -40,7 +66,7 @@ public class Point implements IDrawable {
 
     @Override
     public String toString() {
-        return String.format("Point: %.2f %.2f, %.2f", x, y, r);
+        return String.format("Point: %.2f %.2f %.2f", x, y, r);
     }
 
 }
