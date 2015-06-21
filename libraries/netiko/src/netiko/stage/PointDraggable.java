@@ -16,6 +16,13 @@ public final class PointDraggable extends AbstractDraggable implements IPoint, I
         setFigurePoints(new Point[]{point});
     }
 
+    PointDraggable(Point _point) {
+        super(_point);
+        point = (Point)drawable; // composition pattern
+        setOffsetPointReference(point);
+        setFigurePoints(new Point[]{point});
+    }
+
     PointDraggable(float x, float y) {
         this(x, y, Stage.POINT_RADIUS);
     }
