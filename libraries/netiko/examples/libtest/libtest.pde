@@ -37,7 +37,7 @@ void setup() {
   s1_data.add(new ShapeDataVertex(Stage.pointDraggable(0, 100)));
   s1_data.add(new ShapeDataBezierVertex(Stage.pointDraggable(-50, 100), Stage.pointDraggable(-50, 150), Stage.pointDraggable(0, 150)));
   s1_data.add(new ShapeDataQuadraticVertex(Stage.pointDraggable(50, 200), Stage.pointDraggable(0, 250)));
-  s1 = Stage.shape("myShape", color(150, 100), color(100, 0, 0), null, null, s1_data);
+  s1 = Stage.shape("myShape", color(150, 100, 0 , 50), color(100, 0, 0, 70), null, null, s1_data);
   
   ArrayList<AbstractShapeData> s2_data = new ArrayList();
   s2_data.add(new ShapeDataVertex(Stage.pointVirtual(-40, -40)));
@@ -50,19 +50,21 @@ void setup() {
   s2_data.add(new ShapeDataVertex(Stage.pointDraggable(20, 20)));
   s2_data.add(new ShapeDataVertex(Stage.pointDraggable(20, -20)));
   s2_data.add(new ShapeContour(ShapeContour.END));
-  s2 = Stage.shape("myShape2", color(150, 100), color(0, 0, 0, 100), null, CLOSE, s2_data);
+  s2 = Stage.shape("myShape2", color(150, 100), color(0, 0, 0, 70), null, CLOSE, s2_data);
   
   ArrayList<AbstractShapeData> s3_data = new ArrayList();
   s3_data.add(new ShapeDataLine(Stage.pointDraggable(-100, -100), Stage.pointDraggable(100, -100)));
   s3_data.add(new ShapeDataLine(Stage.pointDraggable(-100, -100), Stage.pointDraggable(200, -200)));
-  s3 = Stage.shape("myShape3", color(150, 100), color(100, 0, 0, 100), null, null, s3_data);
+  s3 = Stage.shape("myShape3", color(150, 100), color(100, 0, 0, 70), null, null, s3_data);
   
   sd1 = Stage.shapeDraggable(s1);
   sd2 = Stage.shapeDraggable(s2);
   sd3 = Stage.shapeDraggable(s3);
   
   p1 = Stage.pointDraggable(0, 0, 10);
+  
   p2 = Stage.pointDraggable(30, 20, 3);
+  
   p3 = Stage.pointDraggable(80, 0, 3);
   p4 = Stage.pointDraggable(80, 75, 3);
   p5 = Stage.pointDraggable(30, 75, 3);
@@ -76,8 +78,8 @@ void setup() {
       if (emitter == p1) {
         //println(s1.getData(4));
         //println(((AbstractShapeDataVertex)s1.getData(4)).p(0));
-        ((AbstractShapeDataVertex)s1.getData(4)).p(0).x(p1.x());
-        p4.x(p1.x());
+        //((AbstractShapeDataVertex)s1.getData(4)).p(0).x(p1.x());
+        //p4.x(p1.x());
       }
     }
   });
@@ -103,15 +105,16 @@ void draw() {
   //p1.x = n;
   //p1.y = n;
   
-  
+  /*
   fill(color(100,0,0,100));
   stroke(0);
   beginShape();
   vertex(p2.x(), p2.y());
   bezierVertex(p3.x(), p3.y(), p4.x(), p4.y(), p5.x(), p5.y());
   endShape();
+  */
   
-  
+
   Stage.endDraw();
   
 }

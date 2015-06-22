@@ -61,6 +61,7 @@ public final class PointDraggable extends AbstractDraggable implements IPoint, I
                 Stage.emitEvent(selfEvent, this);
             }
         }
+        point.onEvent(evt, emitter); // forward the event | actually Point listens for its event to update its text info
     }
 
     @Override

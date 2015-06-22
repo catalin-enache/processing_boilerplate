@@ -9,7 +9,7 @@ import java.util.Map;
 
 
 /*
-TODO: be able to see coords of points, of mouse, constrain drag h|v|rect, make some high level controls (slider)
+TODO: be able to constrain drag h|v|rect, make some high level controls (slider), remove offset stuff in draggable?
 */
 public class Stage  {
 
@@ -26,6 +26,7 @@ public class Stage  {
     protected static int pointStrokeColor;
     protected static int pointDraggableHoverColor;
     protected static int boundingRectColor;
+    protected static int textColor;
     protected static boolean isCartezian;
 
     protected static Map<Event.Name, HashSet<IStageEventClient>> eventsRegister = new HashMap<>();
@@ -41,6 +42,7 @@ public class Stage  {
     protected static Object mouseHoverSetter = null;
 
     protected static ArrayList<IDrawable> drawables = new ArrayList<>();
+    protected static ArrayList<IDrawable> stageWidgets = new ArrayList<>();
     /*
     usage:  Stage.startSetup(this, 600, 600, true);
     */
@@ -53,16 +55,16 @@ public class Stage  {
 
         bgColor = 0XFFFFFFFF;
         strokeColor = p.color(255, 102, 0);
-        fillColor = p.color(0, 100, 0, 100);
+        fillColor = p.color(0, 100, 0, 70);
         pointColor = 0X99ffffff; // point bgColor
         pointStrokeColor = p.color(100, 100, 100, 100);
         pointDraggableHoverColor = p.color(0, 0, 255, 255);
         boundingRectColor = p.color(0, 0, 255, 255);
+        textColor = p.color(0, 0, 0, 255);
 
         isCartezian = _isCartezian;
 
-
-
+        addStageWidget(new TextStageInfo("info", 2, height - 2, 8));
 
         p.size(width, height, renderer);
 
@@ -115,6 +117,11 @@ public class Stage  {
         return newShapeDraggable;
     }
 
+    protected static void addStageWidget(IDrawable client) {
+        addEventClient(client);
+        stageWidgets.add(client);
+    }
+
     protected static void addDrawable(IDrawable client) {
         addEventClient(client);
         drawables.add(client);
@@ -127,7 +134,7 @@ public class Stage  {
     }
     public void onEvent(Event evt, Object emitter) {
       if (emitter == p1) {
-        ((ShapeDataVertex)s1.getData(0)).x(p1.x());
+        ((AbstractShapeDataVertex)s1.getData(4)).p(0).x(p1.x());
       }
     }
   });
@@ -161,6 +168,9 @@ public class Stage  {
     public static int getPointDraggableHoverColor() {return pointDraggableHoverColor; }
 
     public static int getBoundingRectColor() {return boundingRectColor; }
+
+    public static int getTextColor() {return textColor; }
+
     // SECTION set stuff
 
     public static void setHoverState(boolean on, Object setter) {
@@ -201,6 +211,12 @@ public class Stage  {
         if (isCartezian) {
             reverseSceneY();
         }
+
+        if (isCartezian) { // reset cartesian translation before drawing stage wigets
+            p.translate(-width/2, -height/2);
+        }
+
+        drawStageWidgets();
     }
 
     private static void setMouseCoords() {
@@ -215,6 +231,12 @@ public class Stage  {
         distMouseY = mouseY - prevMouseY;
         prevMouseX = mouseX;
         prevMouseY = mouseY;
+    }
+
+    private static void drawStageWidgets() {
+        for (IDrawable d : stageWidgets) {
+            d.draw();
+        }
     }
 
     private static void drawCoords() {
