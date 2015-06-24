@@ -9,7 +9,7 @@ import java.util.Map;
 
 
 /*
-TODO: be able to constrain drag h|v|rect, make some high level controls (slider), remove offset stuff in draggable?
+TODO: be able to constrain drag h|v|rect, make some high level controls button, remove offset stuff in draggable?
 */
 public class Stage  {
 
@@ -25,6 +25,8 @@ public class Stage  {
     protected static int pointColor;
     protected static int pointStrokeColor;
     protected static int pointDraggableHoverColor;
+    protected static int pointDraggableLimitsStrokeColor;
+    protected static int pointDraggableLimitsBgColor;
     protected static int boundingRectColor;
     protected static int textColor;
     protected static boolean isCartezian;
@@ -58,7 +60,9 @@ public class Stage  {
         fillColor = p.color(0, 100, 0, 70);
         pointColor = 0X99ffffff; // point bgColor
         pointStrokeColor = p.color(100, 100, 100, 100);
-        pointDraggableHoverColor = p.color(0, 0, 255, 255);
+        pointDraggableHoverColor = p.color(0, 0, 255, 100);
+        pointDraggableLimitsStrokeColor = p.color(0, 100, 0, 100);
+        pointDraggableLimitsBgColor = p.color(0, 100, 0, 30);
         boundingRectColor = p.color(0, 0, 255, 255);
         textColor = p.color(0, 0, 0, 255);
 
@@ -103,6 +107,14 @@ public class Stage  {
     public static PointDraggable pointDraggable(float x, float y) {
         return pointDraggable(x, y, POINT_RADIUS);
     }
+
+    public static PointDraggable pointDraggable(float x, float y, float r, float tlx, float tly, float brx, float bry, boolean drawLimits, float startRangeX, float endRangeX, float startRangeY, float endRangeY, float step) {
+        PointDraggable newPointDraggable =  new PointDraggable(x, y, r, tlx, tly, brx, bry, drawLimits, startRangeX, endRangeX, startRangeY, endRangeY, step);
+        addDrawable(newPointDraggable);
+        return newPointDraggable;
+    }
+
+
 
     // s1 = Stage.shape("myShape", bgColor(150, 100), bgColor(100, 0, 0), null, null, s1_data);
     public static Shape shape(String name, int bgColor, int sColor, Integer beginShape, Integer endShape, ArrayList<AbstractShapeData> shapeData) {
@@ -165,7 +177,11 @@ public class Stage  {
 
     public static int getPointStrokeColor() {return pointStrokeColor; }
 
-    public static int getPointDraggableHoverColor() {return pointDraggableHoverColor; }
+    public static int getPointDraggableHoverColor() { return pointDraggableHoverColor; }
+
+    public static int getPointDraggableLimitsStrokeColor() { return pointDraggableLimitsStrokeColor; }
+
+    public static int getPointDraggableLimitsBgColor() { return pointDraggableLimitsBgColor; }
 
     public static int getBoundingRectColor() {return boundingRectColor; }
 

@@ -67,9 +67,10 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
         }
     }
 
+    // most general & simple calculation - a rect around all shape points
     protected IPoint[] boundingRect () {
         if (figurePoints.length == 1) {
-            return null;
+            return null; // not interesting in having a rect around a point
         }
         PointVirtual tl = new PointVirtual(Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY);
         PointVirtual tr = new PointVirtual(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
@@ -108,7 +109,8 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
 
     protected void drag() {
         if (dragStarted) {
-            followNewDirection(Stage.distMouseX, Stage.distMouseY);
+            followNewDirection();
+            Stage.emitEvent(new Event(Event.Name.draggableDragged, null), this);
         }
     }
 
@@ -116,10 +118,10 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
         return new float[]{offsetPointReference.x() - mx, offsetPointReference.y() - my};
     }
 
-    protected void followNewDirection(float x, float y) {
+    protected void followNewDirection() {
         for (IPoint p : figurePoints) {
-            p.xy(p.x() + x, p.y() + y );
-            Stage.emitEvent(new Event(Event.Name.draggableDragged, null), this);
+            // simplest approach using mouse distance between previous frame and current frame
+            p.xy(p.x() + Stage.distMouseX, p.y() + Stage.distMouseY);
         }
     }
 
