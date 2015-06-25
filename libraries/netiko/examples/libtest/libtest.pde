@@ -4,6 +4,7 @@ import netiko.stage.Stage;
 import netiko.stage.Point;
 import netiko.stage.PointVirtual;
 import netiko.stage.PointDraggable;
+import netiko.stage.Slider;
 import netiko.stage.Shape;
 import netiko.stage.ShapeDraggable;
 import netiko.stage.AbstractShapeData;
@@ -19,7 +20,7 @@ import netiko.stage.Event;
 PointDraggable p1, p2, p3, p4, p5;
 Shape s1, s2, s3;
 ShapeDraggable sd1, sd2, sd3;
-
+Slider sl1, sl2;
 
 int n = 0;
 
@@ -31,7 +32,7 @@ int h = 600;
 
 void setup() {
   Stage.startSetup(this, w, h, true);
-  /*
+  
   ArrayList<AbstractShapeData> s1_data = new ArrayList();
   s1_data.add(new ShapeDataVertex(Stage.point(0, 0)));
   s1_data.add(new ShapeDataVertex(Stage.pointVirtual(50, 50)));
@@ -61,18 +62,20 @@ void setup() {
   sd1 = Stage.shapeDraggable(s1);
   sd2 = Stage.shapeDraggable(s2);
   sd3 = Stage.shapeDraggable(s3);
-  */
-  p1 = Stage.pointDraggable(0, 0, 8, -100, 100, 100, -100, true, -10, 10, -5, 5, 1);
-  p2 = Stage.pointDraggable(0, -200, 8, -100, -200, 100, -200, true, -10, 10, 0, 0, 1);
-  //p1 = Stage.pointDraggable(200, 200, 8, 100, 100, 300, 300, true, -10, 10, -5, 5, 10);
-  //p2 = Stage.pointDraggable(200, 400, 8, 100, 400, 300, 400, true, -10, 10, -5, 5, 10);
+  
+  sl1 = Stage.slider(0, 0, 8, -100, 100, 100, -100, true, -10, 10, -5, 5, 1, 1);
+  sl2 = Stage.slider(0, -200, 8, -50, -200, 100, -200, true, -10, 10, 0, 0, 1, 0);
+  //sl1 = Stage.slider(200, 200, 8, 100, 100, 300, 300, true, -10, 10, -5, 5, 10, 10);
+  //sl2 = Stage.slider(200, 400, 8, 100, 400, 300, 400, true, -10, 10, -5, 5, 10, 10);
+  
+  //p1 = Stage.pointDraggable(0, 0, 8);
   /*
   p2 = Stage.pointDraggable(30, 20, 3);
   p3 = Stage.pointDraggable(80, 0, 3);
   p4 = Stage.pointDraggable(80, 75, 3);
   p5 = Stage.pointDraggable(30, 75, 3);
   */
-  
+  /*
   // hook into events stream
   Stage.addEventClient(new IStageEventClient(){
     public Event.Name[] registerForEvents() {
@@ -97,7 +100,7 @@ void setup() {
         //println("event: " + evt);
     }
   });
-  
+  */
   Stage.endSetup();
 }
 

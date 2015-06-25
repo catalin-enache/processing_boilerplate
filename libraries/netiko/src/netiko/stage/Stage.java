@@ -108,15 +108,27 @@ public class Stage  {
         return pointDraggable(x, y, POINT_RADIUS);
     }
 
-    public static PointDraggable pointDraggable(float x, float y, float r, float tlx, float tly, float brx, float bry, boolean drawLimits, float startRangeX, float endRangeX, float startRangeY, float endRangeY, float step) {
-        PointDraggable newPointDraggable =  new PointDraggable(x, y, r, tlx, tly, brx, bry, drawLimits, startRangeX, endRangeX, startRangeY, endRangeY, step);
-        addDrawable(newPointDraggable);
-        return newPointDraggable;
+    /*
+    usage:
+    sl1 = Stage.slider(0, 0, 8, -100, 100, 100, -100, true, -10, 10, -5, 5, 1, 1);
+    sl2 = Stage.slider(0, -200, 8, -100, -200, 100, -200, true, -10, 10, 0, 0, 1, 1);
+    */
+    public static Slider slider(float x, float y, float r, float tlx, float tly, float brx, float bry, boolean drawLimits, float startRangeX, float endRangeX, float startRangeY, float endRangeY, float stepX, float stepY) {
+        Slider newSlider =  new Slider(x, y, r, tlx, tly, brx, bry, drawLimits, startRangeX, endRangeX, startRangeY, endRangeY, stepX, stepY);
+        addDrawable(newSlider);
+        return newSlider;
     }
 
-
-
-    // s1 = Stage.shape("myShape", bgColor(150, 100), bgColor(100, 0, 0), null, null, s1_data);
+    /*
+    usage:
+      ArrayList<AbstractShapeData> s1_data = new ArrayList();
+      s1_data.add(new ShapeDataVertex(Stage.point(0, 0)));
+      s1_data.add(new ShapeDataVertex(Stage.pointVirtual(50, 50)));
+      s1_data.add(new ShapeDataVertex(Stage.pointDraggable(0, 100)));
+      s1_data.add(new ShapeDataBezierVertex(Stage.pointDraggable(-50, 100), Stage.pointDraggable(-50, 150), Stage.pointDraggable(0, 150)));
+      s1_data.add(new ShapeDataQuadraticVertex(Stage.pointDraggable(50, 200), Stage.pointDraggable(0, 250)));
+      s1 = Stage.shape("myShape", color(150, 100, 0 , 50), color(100, 0, 0, 70), null, null, s1_data);
+    */
     public static Shape shape(String name, int bgColor, int sColor, Integer beginShape, Integer endShape, ArrayList<AbstractShapeData> shapeData) {
         Shape newShape =  new Shape(name, bgColor, sColor, beginShape, endShape, shapeData);
         addDrawable(newShape);
@@ -138,6 +150,7 @@ public class Stage  {
         addEventClient(client);
         drawables.add(client);
     }
+
     /*
     usage:
     Stage.addEventClient(new IStageEventClient(){

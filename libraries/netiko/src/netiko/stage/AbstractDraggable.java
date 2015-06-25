@@ -61,9 +61,10 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
     protected void checkMouseHover() {
         if (isPointInFigure(Stage.mouseX, Stage.mouseY)) {
             Stage.setHoverState(true, this);
-            drawBoundingRect();
+            reactOnMouseHover(true);
         } else {
             Stage.setHoverState(false, this);
+            reactOnMouseHover(false);
         }
     }
 
@@ -91,7 +92,8 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
         return new IPoint[]{tl, tr, br, bl};
     }
 
-    public void drawBoundingRect() {
+    public void reactOnMouseHover(boolean isHover) {
+        if (!isHover) { return; }
         IPoint[] boundingRect = boundingRect();
         if (boundingRect == null) { return; }
         IPoint tl = boundingRect[0];
@@ -109,7 +111,7 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
 
     protected void drag() {
         if (dragStarted) {
-            followNewDirection();
+            setNewPosition();
             Stage.emitEvent(new Event(Event.Name.draggableDragged, null), this);
         }
     }
@@ -118,11 +120,18 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
         return new float[]{offsetPointReference.x() - mx, offsetPointReference.y() - my};
     }
 
-    protected void followNewDirection() {
+    protected void setNewPosition() {
         for (IPoint p : figurePoints) {
             // simplest approach using mouse distance between previous frame and current frame
-            p.xy(p.x() + Stage.distMouseX, p.y() + Stage.distMouseY);
+            float[] newCoords = getNewPosition(p);
+            p.xy(newCoords[0], newCoords[1]);
         }
+    }
+
+    protected float[] getNewPosition(IPoint point) {
+        float newX = point.x() +  Stage.distMouseX;
+        float newY = point.y() + Stage.distMouseY;
+        return new float[] {newX, newY};
     }
 
 }
