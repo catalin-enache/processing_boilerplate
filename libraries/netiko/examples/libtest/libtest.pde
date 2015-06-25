@@ -63,8 +63,8 @@ void setup() {
   sd2 = Stage.shapeDraggable(s2);
   sd3 = Stage.shapeDraggable(s3);
   
-  sl1 = Stage.slider(0, 0, 8, -100, 100, 100, -100, true, -10, 10, -5, 5, 1, 1);
-  sl2 = Stage.slider(0, -200, 8, -50, -200, 100, -200, true, -10, 10, 0, 0, 1, 0);
+  sl1 = Stage.slider(0, 0, 8, -100, 100, 100, -100, true, -10, 10, -5, 5, 2, 1);
+  //sl2 = Stage.slider(0, -200, 8, -50, -200, 100, -200, true, -10, 10, 0, 0, 5, 0);
   //sl1 = Stage.slider(200, 200, 8, 100, 100, 300, 300, true, -10, 10, -5, 5, 10, 10);
   //sl2 = Stage.slider(200, 400, 8, 100, 400, 300, 400, true, -10, 10, -5, 5, 10, 10);
   

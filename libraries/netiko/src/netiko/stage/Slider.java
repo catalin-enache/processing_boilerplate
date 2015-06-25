@@ -7,13 +7,21 @@ import java.util.HashMap;
 public class Slider extends PointDraggable {
 
     private float[] limits = new float[4];
-    private boolean drawLimits = false;
-    private float startRangeX = -1;
-    private float endRangeX = 1;
-    private float startRangeY = -1;
-    private float endRangeY = 1;
-    private float stepX = 0F;
-    private float stepY = 0F;
+    private boolean drawLimits;
+    private float distanceX;
+    private float distanceY;
+    private float startRangeX;
+    private float endRangeX;
+    private float rangeX;
+    private float startRangeY;
+    private float endRangeY;
+    private float rangeY;
+    private float stepX;
+    private float stepY;
+    private int stepXCount;
+    private int stepYCount;
+    private float[] stepXPositions;
+    private float[] stepYPositions;
 
     private float rangeValueX = 0;
     private float rangeValueY = 0;
@@ -22,12 +30,32 @@ public class Slider extends PointDraggable {
         super(x, y, r);
         limits[0] = tlx; limits[1] = tly; limits[2] = brx; limits[3] = bry;
         this.drawLimits = drawLimits;
+        this.distanceX = Math.abs(tlx - brx);
+        this.distanceY = Math.abs(tly - bry);
         this.startRangeX = startRangeX;
         this.endRangeX = endRangeX;
+        this.rangeX = Math.abs(startRangeX - endRangeX);
         this.startRangeY = startRangeY;
         this.endRangeY = endRangeY;
+        this.rangeY = Math.abs(startRangeY - endRangeY);
         this.stepX = stepX;
         this.stepY = stepY;
+        if (stepX > 0) {
+            stepXCount = (int)(rangeX/stepX);
+            stepXPositions = new float[stepXCount+1];
+            for (int sx = 0; sx <= stepXCount; sx += 1) {
+                stepXPositions[sx] = tlx + distanceX * ((sx*stepX)/rangeX);
+            }
+        }
+        if (stepY > 0) {
+            stepYCount = (int)(rangeY/stepY);
+            stepYPositions = new float[stepYCount+1];
+            for (int sy = 0; sy <= stepYCount; sy += 1) {
+                stepYPositions[sy] = bry + distanceY * ((sy*stepY)/rangeY);
+            }
+        }
+
+        System.out.println(stepXCount + "|" + stepYCount);
         if (drawLimits) {
             drawLimits();
         }
@@ -57,8 +85,8 @@ public class Slider extends PointDraggable {
 
     @Override
     protected float[] getNewPosition(IPoint point) {
-        float mx = Stage.mouseX;
-        float my = Stage.mouseY;
+        float newX = Stage.mouseX;
+        float newY = Stage.mouseY;
 
         if (limits.length == 4) {
             float tlx = limits[0];
@@ -67,42 +95,77 @@ public class Slider extends PointDraggable {
             float bry = limits[3];
 
             // do some overrides eventually
-            if (mx <= tlx) {
-                mx = tlx;
+            if (newX <= tlx) {
+                newX = tlx;
             }
-            else if  (mx >= brx) {
-                mx = brx;
+            else if  (newX >= brx) {
+                newX = brx;
             }
             if (Stage.isCartezian) {
-                if (my >= tly) {
-                    my = tly;
+                if (newY >= tly) {
+                    newY = tly;
                 }
-                else if  (my <= bry) {
-                    my = bry;
+                else if  (newY <= bry) {
+                    newY = bry;
                 }
             } else {
-                if (my <= tly) {
-                    my = tly;
+                if (newY <= tly) {
+                    newY = tly;
                 }
-                else if  (my >= bry) {
-                    my = bry;
+                else if  (newY >= bry) {
+                    newY = bry;
                 }
             }
         }
         if (stepX > 0) {
-            mx = applySteppingX(mx);
+            newX = applySteppingX(newX);
         }
         if (stepY > 0) {
-            my = applySteppingY(my);
+            newY = applySteppingY(newY);
         }
-        return new float[] {mx, my};
+        return new float[] {newX, newY};
     }
 
-    protected float applySteppingX(float mx) {
-        return mx;
+    protected float applySteppingX(float newX) {
+        //return newX;
+//        if (newX < stepXPositions[0]) {
+//            System.out.println("<<<<<");
+//            return stepXPositions[0];
+//        }
+//        if (newX > stepXPositions[stepXPositions.length-1]) {
+//            System.out.println(">>>>>");
+//            return stepXPositions[stepXPositions.length-1];
+//        }
+        for (int i = 0 ; i < stepXPositions.length; i++) {
+            if (newX < stepXPositions[i]) {
+                if (Math.abs(stepXPositions[i]-newX) < Math.abs(stepXPositions[i-1]-newX)) {
+                    System.out.println(">");
+                    newX = stepXPositions[i];
+                }
+                else {
+                    System.out.println("<");
+                    newX = stepXPositions[i-1];
+                }
+                break;
+            }
+        }
+        return newX;
     }
-    protected float applySteppingY(float my) {
-        return my;
+    protected float applySteppingY(float newY) {
+        for (int i = 0 ; i < stepYPositions.length; i++) {
+            if (newY < stepYPositions[i]) {
+                if (Math.abs(stepYPositions[i]-newY) < Math.abs(stepYPositions[i-1]-newY)) {
+                    System.out.println(">");
+                    newY = stepYPositions[i];
+                }
+                else {
+                    System.out.println("<");
+                    newY = stepYPositions[i-1];
+                }
+                break;
+            }
+        }
+        return newY;
     }
 
     @Override
