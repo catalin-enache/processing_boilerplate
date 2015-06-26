@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+// TODO: create input text
 public class Stage  {
 
     protected final static float POINT_RADIUS = 3;
