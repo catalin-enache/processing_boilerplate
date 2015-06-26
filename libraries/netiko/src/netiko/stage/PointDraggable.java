@@ -12,7 +12,6 @@ public class PointDraggable extends AbstractDraggable implements IPoint, IRadius
     PointDraggable(float x, float y, float r) {
         super(new Point(x, y, r));
         point = (Point)drawable; // composition pattern
-        setOffsetPointReference(point);
         setFigurePoints(new Point[]{point});
     }
 

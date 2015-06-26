@@ -83,7 +83,7 @@ void setup() {
     }
     public void onEvent(Event evt, Object emitter) {
       if (emitter == sl2) {
-        println(sl2);
+        //println(sl2);
         //println(((AbstractShapeDataVertex)sd1.getData(4)).p(0));
         //((AbstractShapeDataVertex)sd1.getData(4)).p(0).x(p1.x());
         //p4.x(p1.x());

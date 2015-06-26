@@ -9,10 +9,9 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
 
     PApplet p = Stage.getPApplet();
     protected boolean dragStarted = false;
-    protected float[] offset = new float[]{0, 0};
+
 
     IDrawable drawable;
-    protected IPoint offsetPointReference;
     protected IPoint[] figurePoints;
 
     // registers for stage events
@@ -20,10 +19,6 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
 
     AbstractDraggable(IDrawable _drawable) {
         drawable = _drawable;
-    }
-
-    protected void setOffsetPointReference(IPoint point) {
-        offsetPointReference = point;
     }
 
     protected void setFigurePoints(IPoint[] points) {
@@ -46,12 +41,9 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
         if (evt.name == Event.Name.mousePressed) {
             if (p.mouseButton == LEFT && isPointInFigure(Stage.mouseX, Stage.mouseY)) {
                 dragStarted = true;
-                offset = getOffset(Stage.mouseX, Stage.mouseY);
             }
         } else if (evt.name == Event.Name.mouseReleased) {
             dragStarted = false;
-            offset[0] = 0;
-            offset[1] = 0;
         }
         else if (evt.name == Event.Name.mouseMove) {
             checkMouseHover();
@@ -114,10 +106,6 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
             setNewPosition();
             Stage.emitEvent(new Event(Event.Name.draggableDragged, null), this);
         }
-    }
-
-    protected float[] getOffset(float mx, float my) {
-        return new float[]{offsetPointReference.x() - mx, offsetPointReference.y() - my};
     }
 
     protected void setNewPosition() {

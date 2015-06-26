@@ -11,7 +11,6 @@ public class ShapeDraggable extends AbstractDraggable {
     ShapeDraggable(Shape _shape) {
         super(_shape);
         shape = (Shape)drawable; // composition pattern
-        setOffsetPointReference((IPoint)(shape.points.toArray()[0]));
         setFigurePoints(shape.points.toArray(new IPoint[]{}));
     }
 
