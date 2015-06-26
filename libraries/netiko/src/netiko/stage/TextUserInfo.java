@@ -4,14 +4,13 @@ package netiko.stage;
 
 public class TextUserInfo extends Text {
 
-    protected final Event.Name[] eventNamesRegisteredFor = new Event.Name[]{};
-
     public TextUserInfo (String text, float x, float y, float size) {
         super(text, x, y, size);
     }
 
     @Override
     public void draw() {
+        // the same as for text just don't flip
         p.pushStyle();
         p.pushMatrix();
         p.fill(textColor);

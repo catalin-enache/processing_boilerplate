@@ -9,6 +9,7 @@ public class Text implements IDrawable, IPoint {
     protected float size;
     protected int textColor = Stage.getTextColor();
     protected PApplet p = Stage.getPApplet();
+    protected final Event.Name[] eventNamesRegisteredFor = new Event.Name[]{};
 
     public Text (String text, float x, float y, float size) {
         this.text = text;
@@ -42,7 +43,7 @@ public class Text implements IDrawable, IPoint {
 
     @Override
     public Event.Name[] registerForEvents() {
-        return new Event.Name[0];
+        return eventNamesRegisteredFor;
     }
 
     @Override
