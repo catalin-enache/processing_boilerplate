@@ -27,6 +27,6 @@ public class TextStageInfo extends Text {
 
     @Override
     public void onEvent(Event evt, Object emitter) {
-        text = String.format("x: %.0f, y: %.0f", evt.data.get("x"), evt.data.get("y"));
+        text = String.format("x: %3.0f, y: %3.0f", evt.data.get("x"), evt.data.get("y"));
     }
 }

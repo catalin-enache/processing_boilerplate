@@ -54,6 +54,8 @@ public class Point extends PointVirtual implements IDrawable, IRadius {
 
         p.ellipseMode(RADIUS);
         p.ellipse(0, 0, r, r);
+
+        p.textFont(Stage.fA8, 8);
         textInfoX.draw();
         textInfoY.draw();
 

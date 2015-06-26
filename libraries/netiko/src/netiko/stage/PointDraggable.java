@@ -62,9 +62,7 @@ public class PointDraggable extends AbstractDraggable implements IPoint, IRadius
     }
 
     protected void processPointUpdatedEvent(Event evt, Object emitter) {
-        HashMap<String, Object> eventData = new HashMap<>();
-        Event selfEvent = new Event(Event.Name.pointUpdated, eventData);
-        Stage.emitEvent(selfEvent, this);
+        Stage.emitEvent(new Event(Event.Name.pointUpdated, null), this);
     }
 
     @Override

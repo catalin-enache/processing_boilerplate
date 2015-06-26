@@ -63,34 +63,34 @@ void setup() {
   sd2 = Stage.shapeDraggable(s2);
   sd3 = Stage.shapeDraggable(s3);
   
-  sl1 = Stage.slider(0, 0, 8, -100, 100, 100, -100, true, -10, 10, -5, 5, 2, 1);
-  //sl2 = Stage.slider(0, -200, 8, -50, -200, 100, -200, true, -10, 10, 0, 0, 5, 0);
-  //sl1 = Stage.slider(200, 200, 8, 100, 100, 300, 300, true, -10, 10, -5, 5, 10, 10);
-  //sl2 = Stage.slider(200, 400, 8, 100, 400, 300, 400, true, -10, 10, -5, 5, 10, 10);
+  sl1 = Stage.slider(0, 0, 8, -100, 100, 100, -100, true, -10, 10, 5, -5, 10, 5);
+  sl2 = Stage.slider(0, -200, 8, -50, -200, 100, -200, true, -1, 1, 0, 0, 0.5, 0);
+  //sl1 = Stage.slider(200, 200, 8, 100, 100, 300, 300, true, -10, 10, -5, 5, 10, 5);
+  //sl2 = Stage.slider(200, 400, 8, 100, 400, 300, 400, true, -1, 1, 0, 0, 0.2, 0);
   
-  //p1 = Stage.pointDraggable(0, 0, 8);
+  p1 = Stage.pointDraggable(0, 0, 8);
   /*
   p2 = Stage.pointDraggable(30, 20, 3);
   p3 = Stage.pointDraggable(80, 0, 3);
   p4 = Stage.pointDraggable(80, 75, 3);
   p5 = Stage.pointDraggable(30, 75, 3);
   */
-  /*
+  
   // hook into events stream
   Stage.addEventClient(new IStageEventClient(){
     public Event.Name[] registerForEvents() {
       return new Event.Name[]{Event.Name.draggableDragged};
     }
     public void onEvent(Event evt, Object emitter) {
-      if (emitter == p1) {
-        //println(s1.getData(4));
-        //println(((AbstractShapeDataVertex)s1.getData(4)).p(0));
-        //((AbstractShapeDataVertex)s1.getData(4)).p(0).x(p1.x());
+      if (emitter == sl2) {
+        println(sl2);
+        //println(((AbstractShapeDataVertex)sd1.getData(4)).p(0));
+        //((AbstractShapeDataVertex)sd1.getData(4)).p(0).x(p1.x());
         //p4.x(p1.x());
       }
     }
   });
-  
+  /*
   Stage.addEventClient(new IStageEventClient(){
     public Event.Name[] registerForEvents() {
       return new Event.Name[]{Event.Name.shapeModified};

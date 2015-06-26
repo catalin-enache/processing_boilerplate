@@ -23,6 +23,7 @@ public class Text implements IDrawable, IPoint {
         p.pushMatrix();
         p.fill(textColor);
         p.textSize(size);
+
         if (Stage.isCartezian) {
             p.scale(1, -1); // flip vertically because Stage will flip back everything when cartesian
         }

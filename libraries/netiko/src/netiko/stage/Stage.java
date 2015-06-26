@@ -9,7 +9,7 @@ import java.util.Map;
 
 
 /*
-TODO: be able to constrain drag h|v|rect, make some high level controls button, remove offset stuff in draggable?
+TODO: make some high level controls button?, remove offset stuff in draggable?
 */
 public class Stage  {
 
@@ -45,6 +45,10 @@ public class Stage  {
 
     protected static ArrayList<IDrawable> drawables = new ArrayList<>();
     protected static ArrayList<IDrawable> stageWidgets = new ArrayList<>();
+    public static TextUserInfo textUserInfo;
+
+    protected static PFont fA12;
+    protected static PFont fA8;
     /*
     usage:  Stage.startSetup(this, 600, 600, true);
     */
@@ -68,9 +72,16 @@ public class Stage  {
 
         isCartezian = _isCartezian;
 
-        addStageWidget(new TextStageInfo("info", 2, height - 2, 8));
+        fA12 = p.createFont("Arial", 12, true);
+        fA8 = p.createFont("Arial", 8, true);
+
+        addStageWidget(new TextStageInfo("stageInfo", 2, height - 4, 12));
+        // default user info (user can update its text data)
+        textUserInfo = new TextUserInfo("userInfo", 2, 10, 12);
+        addStageWidget(textUserInfo);
 
         p.size(width, height, renderer);
+        p.textFont(fA12, 12);
 
         start();
     }
@@ -113,7 +124,7 @@ public class Stage  {
     sl1 = Stage.slider(0, 0, 8, -100, 100, 100, -100, true, -10, 10, -5, 5, 1, 1);
     sl2 = Stage.slider(0, -200, 8, -100, -200, 100, -200, true, -10, 10, 0, 0, 1, 1);
     */
-    public static Slider slider(float x, float y, float r, float tlx, float tly, float brx, float bry, boolean drawLimits, float startRangeX, float endRangeX, float startRangeY, float endRangeY, float stepX, float stepY) {
+    public static Slider slider(float x, float y, float r, int tlx, int tly, int brx, int bry, boolean drawLimits, int startRangeX, int endRangeX, int startRangeY, int endRangeY, float stepX, float stepY) {
         Slider newSlider =  new Slider(x, y, r, tlx, tly, brx, bry, drawLimits, startRangeX, endRangeX, startRangeY, endRangeY, stepX, stepY);
         addDrawable(newSlider);
         return newSlider;
@@ -222,6 +233,7 @@ public class Stage  {
         p.strokeWeight(1);
         p.stroke(strokeColor); // p.stroke(bgColor) seems to help with antialiasing ?
         p.background(bgColor);
+
 
         if (isCartezian) {
             p.translate(width/2, height/2);
