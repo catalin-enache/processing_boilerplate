@@ -7,10 +7,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-
-/*
-TODO: make some high level controls button?, remove offset stuff in draggable?
-*/
 public class Stage  {
 
     protected final static float POINT_RADIUS = 3;
