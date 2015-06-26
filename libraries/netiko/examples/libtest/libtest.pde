@@ -83,6 +83,8 @@ void setup() {
     }
     public void onEvent(Event evt, Object emitter) {
       if (emitter == sl2) {
+        Stage.textUserInfo.text((new Integer(n)).toString());
+        Stage.textUserInfo.x(n);
         //println(sl2);
         //println(((AbstractShapeDataVertex)sd1.getData(4)).p(0));
         //((AbstractShapeDataVertex)sd1.getData(4)).p(0).x(p1.x());
@@ -107,7 +109,7 @@ void setup() {
 void draw() {
   Stage.startDraw();
   
-  //n += 1;
+  n += 1;
   //p1.z = -n;
   //p1.x = n;
   //p1.y = n;

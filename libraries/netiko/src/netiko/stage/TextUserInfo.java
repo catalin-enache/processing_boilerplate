@@ -21,10 +21,4 @@ public class TextUserInfo extends Text {
         p.popStyle();
     }
 
-    public void text(String message) {
-        text = message;
-    }
-    public String text() {
-        return text;
-    }
 }
