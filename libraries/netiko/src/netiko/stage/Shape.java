@@ -82,6 +82,7 @@ public class Shape implements IDrawable {
 
     @Override
     public void onEvent(Event evt, Object emitter) {
+        // broadcast shapeModified for pointUpdated if point in our points
         if (evt.name == Event.Name.pointUpdated) {
             int pointsNum = points.size();
             for  (int i = 0; i < pointsNum; i++) {

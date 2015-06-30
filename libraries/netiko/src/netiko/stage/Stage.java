@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-// TODO: create input text, why Stage.textUserInfo is rendered twice ?
+// TODO: create input text
 public class Stage  {
 
     protected final static float POINT_RADIUS = 3;
@@ -50,9 +50,9 @@ public class Stage  {
     usage:  Stage.startSetup(this, 600, 600, true);
     */
     public static void startSetup(PApplet _p, int _width, int _height, boolean _isCartezian) {
-        p = _p; // PApplet
         renderer = P2D; // what renderer to use
-
+        _p.size(_width, _height, renderer); // must be called at the very beginning or code might be run twice (Processing behaviour)
+        p = _p; // PApplet
         width = _width; // stage width
         height = _height; // stage height
 
@@ -77,13 +77,13 @@ public class Stage  {
         textUserInfo = new TextUserInfo("userInfo", 2, 10, 12);
         addStageWidget(textUserInfo);
 
-        p.size(width, height, renderer);
+
         p.textFont(fA12, 12);
 
         start();
     }
 
-    public static void endSetup() { end(); }
+    public static void endSetup() { end();  }
 
     public static void startDraw() { start(); }
 

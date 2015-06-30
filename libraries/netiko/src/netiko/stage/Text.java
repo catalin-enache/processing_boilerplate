@@ -38,7 +38,7 @@ public class Text implements IDrawable, IPoint {
     }
 
     public void text(String txt) {
-        text = txt;
+        text = txt.replaceAll("\t", "    ");
     }
 
     @Override

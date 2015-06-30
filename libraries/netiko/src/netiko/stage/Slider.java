@@ -40,12 +40,16 @@ public class Slider extends PointDraggable {
         this.rangeY = Math.abs(startRangeY - endRangeY);
         this.stepX = stepX;
         this.stepY = stepY;
+        init();
+    }
 
+    // to be called whenever limits is updated (when Slider is part of a Shape controls and the Shape is dragged)
+    protected void init() {
         if (stepX > 0) {
             stepXCount = (int)(rangeX/stepX);
             stepXPositions = new float[stepXCount+1];
             for (int sx = 0; sx <= stepXCount; sx += 1) {
-                stepXPositions[sx] = tlx + distanceX * ((sx*stepX)/(float)rangeX);
+                stepXPositions[sx] = limits[0] + distanceX * ((sx*stepX)/(float)rangeX); // tlx == limits[0]
             }
         }
 
@@ -54,13 +58,17 @@ public class Slider extends PointDraggable {
             stepYPositions = new float[stepYCount+1];
             for (int sy = 0; sy <= stepYCount; sy += 1) {
                 if (Stage.isCartezian) {
-                    stepYPositions[sy] = bry + distanceY * ((sy*stepY)/(float)rangeY);
+                    stepYPositions[sy] = limits[3] + distanceY * ((sy*stepY)/(float)rangeY); // bry == limits[3]
                 } else {
-                    stepYPositions[sy] = tly + distanceY * ((sy*stepY)/(float)rangeY);
+                    stepYPositions[sy] = limits[1] + distanceY * ((sy*stepY)/(float)rangeY); // tly == limits[1]
                 }
             }
         }
+    }
 
+    @Override
+    public void draw() {
+        super.draw();
         if (drawLimits) {
             drawLimits();
         }
@@ -68,13 +76,14 @@ public class Slider extends PointDraggable {
 
     protected void drawLimits() {
         p.pushStyle();
-        // tlx, tly, brx, bry
-        ArrayList<AbstractShapeData> shapeData = new ArrayList<>();
-        shapeData.add(new ShapeDataVertex(Stage.pointVirtual(limits[0], limits[1])));
-        shapeData.add(new ShapeDataVertex(Stage.pointVirtual(limits[2], limits[1])));
-        shapeData.add(new ShapeDataVertex(Stage.pointVirtual(limits[2], limits[3])));
-        shapeData.add(new ShapeDataVertex(Stage.pointVirtual(limits[0], limits[3])));
-        Stage.shape("", Stage.getPointDraggableLimitsBgColor(), Stage.getPointDraggableLimitsStrokeColor(), null, p.CLOSE, shapeData);
+        p.fill(Stage.getPointDraggableLimitsBgColor()); // Stage.getPointDraggableLimitsBgColor()
+        p.stroke(Stage.getPointDraggableLimitsStrokeColor());
+        p.beginShape();
+        p.vertex(limits[0], limits[1], limits[2], limits[1]);
+        p.vertex(limits[2], limits[1], limits[2], limits[3]);
+        p.vertex(limits[2], limits[3], limits[0], limits[3]);
+        p.vertex(limits[0], limits[3], limits[0], limits[1]);
+        p.endShape(p.CLOSE);
         p.popStyle();
     }
 
@@ -84,7 +93,7 @@ public class Slider extends PointDraggable {
         rangeValueY = p.map(point.y(), limits[1], limits[3], startRangeY, endRangeY);
         if (Float.isNaN(rangeValueX)) { rangeValueX = 0; }
         if (Float.isNaN(rangeValueY)) { rangeValueY = 0; }
-        super.processPointUpdatedEvent(evt, emitter);
+        super.processPointUpdatedEvent(evt, emitter); // Shape might be interested
     }
 
     @Override
@@ -161,6 +170,33 @@ public class Slider extends PointDraggable {
 
     public float rangeX() { return rangeValueX; }
     public float rangeY() { return rangeValueY; }
+
+    @Override
+    public void xy(float x, float y) {
+        // just to be clear this is called only when Slider is part of a Shape and the Shape is dragged not when the Slider is dragged
+        limits[0] += Stage.distMouseX;
+        limits[2] += Stage.distMouseX;
+        limits[1] += Stage.distMouseY;
+        limits[3] += Stage.distMouseY;
+        init();
+        super.xy(x, y);
+    }
+
+    @Override
+    public void x(float x) {
+        limits[0] += Stage.distMouseX;
+        limits[2] += Stage.distMouseX;
+        init();
+        super.x(x);
+    }
+
+    @Override
+    public void y(float y) {
+        limits[1] += Stage.distMouseY;
+        limits[3] += Stage.distMouseY;
+        init();
+        super.y(y);
+    }
 
     @Override
     public String toString() { return String.format("Slider: x: %.2f, y: %.2f, rangeX: %.2f, rangeY: %.2f", x(), y(), rangeX(), rangeY()); }

@@ -1,10 +1,13 @@
 
 import java.util.ArrayList;
+
 import netiko.stage.Stage;
+
 import netiko.stage.Point;
 import netiko.stage.PointVirtual;
 import netiko.stage.PointDraggable;
 import netiko.stage.Slider;
+
 import netiko.stage.Shape;
 import netiko.stage.ShapeDraggable;
 import netiko.stage.AbstractShapeData;
@@ -14,6 +17,7 @@ import netiko.stage.ShapeDataVertex;
 import netiko.stage.ShapeDataBezierVertex;
 import netiko.stage.ShapeDataQuadraticVertex;
 import netiko.stage.ShapeContour;
+
 import netiko.stage.IStageEventClient;
 import netiko.stage.Event;
 
@@ -28,11 +32,8 @@ int n = 0;
 int w = 600;
 int h = 600;
 
-
-
 void setup() {
   Stage.startSetup(this, w, h, true);
-  
   ArrayList<AbstractShapeData> s1_data = new ArrayList();
   s1_data.add(new ShapeDataVertex(Stage.point(0, 0)));
   s1_data.add(new ShapeDataVertex(Stage.pointVirtual(50, 50)));
@@ -83,8 +84,7 @@ void setup() {
     }
     public void onEvent(Event evt, Object emitter) {
       if (emitter == sl2) {
-        Stage.textUserInfo.text((new Integer(n)).toString());
-        Stage.textUserInfo.x(n);
+        Stage.textUserInfo.x(sl2.x());
         //println(sl2);
         //println(((AbstractShapeDataVertex)sd1.getData(4)).p(0));
         //((AbstractShapeDataVertex)sd1.getData(4)).p(0).x(p1.x());
@@ -110,6 +110,7 @@ void draw() {
   Stage.startDraw();
   
   n += 1;
+  Stage.textUserInfo.text((new Integer(n)).toString());
   //p1.z = -n;
   //p1.x = n;
   //p1.y = n;

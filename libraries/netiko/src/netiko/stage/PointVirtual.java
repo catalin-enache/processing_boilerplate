@@ -16,6 +16,7 @@ public class PointVirtual implements IPoint {
 
     @Override
     public void x(float x) {
+        if (this.x == x) { return; }
         this.x = x;
         Stage.emitEvent(new Event(Event.Name.pointUpdated, null), this);
     }
@@ -27,6 +28,7 @@ public class PointVirtual implements IPoint {
 
     @Override
     public void y(float y) {
+        if (this.y == y) { return; }
         this.y = y;
         Stage.emitEvent(new Event(Event.Name.pointUpdated, null), this);
     }
@@ -38,6 +40,7 @@ public class PointVirtual implements IPoint {
 
     @Override
     public void xy(float x, float y) {
+        if (this.x == x && this.y == y) { return; }
         this.x = x;
         this.y = y;
         Stage.emitEvent(new Event(Event.Name.pointUpdated, null), this);

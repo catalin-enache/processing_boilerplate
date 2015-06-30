@@ -15,7 +15,7 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
     protected IPoint[] figurePoints;
 
     // registers for stage events
-    protected final Event.Name[] eventNamesRegisteredFor = new Event.Name[]{ Event.Name.mousePressed, Event.Name.mouseReleased, Event.Name.mouseMove };
+    protected Event.Name[] eventNamesRegisteredFor = new Event.Name[]{ Event.Name.mousePressed, Event.Name.mouseReleased, Event.Name.mouseMove };
 
     AbstractDraggable(IDrawable _drawable) {
         drawable = _drawable;
@@ -65,23 +65,24 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
         if (figurePoints.length == 1) {
             return null; // not interesting in having a rect around a point
         }
-        PointVirtual tl = new PointVirtual(Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY);
-        PointVirtual tr = new PointVirtual(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
-        PointVirtual br = new PointVirtual(Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY);
-        PointVirtual bl = new PointVirtual(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
+
+        float[] tl = new float[]{Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY};
+        float[] tr = new float[]{Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY};
+        float[] br = new float[]{Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY};
+        float[] bl = new float[]{Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY};
 
         for (IPoint p : figurePoints) {
-            tl.x(Math.min(tl.x(), p.x()));
-            tl.y(Math.max(tl.y(), p.y()));
-            tr.x(Math.max(tr.x(), p.x()));
-            tr.y(Math.max(tr.y(), p.y()));
-            br.x(Math.max(br.x(), p.x()));
-            br.y(Math.min(br.y(), p.y()));
-            bl.x(Math.min(bl.x(), p.x()));
-            bl.y(Math.min(bl.y(), p.y()));
+            tl[0] = (Math.min(tl[0], p.x()));
+            tl[1] = (Math.max(tl[1], p.y()));
+            tr[0] = (Math.max(tr[0], p.x()));
+            tr[1] = (Math.max(tr[1], p.y()));
+            br[0] = (Math.max(br[0], p.x()));
+            br[1] = (Math.min(br[1], p.y()));
+            bl[0] = (Math.min(bl[0], p.x()));
+            bl[1] = (Math.min(bl[1], p.y()));
         }
 
-        return new IPoint[]{tl, tr, br, bl};
+        return new IPoint[]{new PointVirtual(tl[0], tl[1]), new PointVirtual(tr[0], tr[1]), new PointVirtual(br[0], br[1]), new PointVirtual(bl[0], bl[1])};
     }
 
     public void reactOnMouseHover(boolean isHover) {
@@ -112,6 +113,9 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
         for (IPoint p : figurePoints) {
             // simplest approach using mouse distance between previous frame and current frame
             float[] newCoords = getNewPosition(p);
+            // (just a clarification)
+            // in case of Slider/PointDraggable being dragged: p is the wrapped Point (that was set in setFigurePoints())
+            // in case of ShapeDraggable being dragged: p might be PointVirtual, Point, PointDraggable, Slider (whatever was set in setFigurePoints())
             p.xy(newCoords[0], newCoords[1]);
         }
     }
