@@ -21,6 +21,7 @@ import netiko.stage.ShapeContour;
 import netiko.stage.IStageEventClient;
 import netiko.stage.Event;
 
+PointDraggable p1;
 Shape s1, s2, s3, s4;
 ShapeDraggable sd1, sd2, sd3, sd4;
 
@@ -37,24 +38,37 @@ void setup() {
   ArrayList<AbstractShapeData> s4_data = new ArrayList();
   
   if (isCartesian) {
+    p1 = Stage.pointDraggable(0, 0, 5);
+    
+    // PointVirtual (not drawable) handlers
     s1_data.add(new ShapeDataVertex(Stage.pointVirtual(-350, 350)));
     s1_data.add(new ShapeDataVertex(Stage.pointVirtual(-250, 350)));
     s1_data.add(new ShapeDataVertex(Stage.pointVirtual(-300, 300)));
     
+    // Point (drawable but not draggable) handlers !!!
     s2_data.add(new ShapeDataVertex(Stage.point(100, 350)));
     s2_data.add(new ShapeDataQuadraticVertex(Stage.point(200, 300), Stage.point(300, 350)));
     
+    // PointDraggable handlers
     s3_data.add(new ShapeDataVertex(Stage.pointDraggable(-350, -100)));
     s3_data.add(new ShapeDataVertex(Stage.pointDraggable(-350, -250)));
     s3_data.add(new ShapeDataVertex(Stage.pointDraggable(-150, -250)));
     s3_data.add(new ShapeDataBezierVertex(Stage.pointDraggable(-150, -150), Stage.pointDraggable(-250, -50), Stage.pointDraggable(-350, -50)));  
-
+    // inner shape
+    s3_data.add(new ShapeContour(ShapeContour.BEGIN));
+    s3_data.add(new ShapeDataVertex(Stage.pointDraggable(-310, -130)));
+    s3_data.add(new ShapeDataVertex(Stage.pointDraggable(-240, -130)));
+    s3_data.add(new ShapeDataVertex(Stage.pointDraggable(-240, -200)));
+    s3_data.add(new ShapeDataVertex(Stage.pointDraggable(-310, -200)));
+    s3_data.add(new ShapeContour(ShapeContour.END));
+    
+    // mixed Slider & PointDraggable handlers
     s4_data.add(new ShapeDataVertex(Stage.slider(50, -50, 3, 50, 0, 50, -250, true, 0, 0, -1, 1, 0, 1))); 
     s4_data.add(new ShapeDataBezierVertex(
                               Stage.pointDraggable(150, -50),
                               Stage.pointDraggable(150, -150),
                               Stage.slider(50, -300, 3, 0, -250, 100, -350, true, -1, 1, -1, 1, 1, 0.25)
-                              //Stage.pointDraggable(50, -300)
+                              //Stage.pointDraggable(50, -300) // this PointDraggable or the previous Slider
                               )); 
     
   } else {
@@ -70,12 +84,17 @@ void setup() {
   sd3 = Stage.shapeDraggable(s3);
   sd4 = Stage.shapeDraggable(s4);
   
+  // hook into events
   Stage.addEventClient(new IStageEventClient(){
     public Event.Name[] registerForEvents() {
       return new Event.Name[]{Event.Name.draggableDragged};
     }
     public void onEvent(Event evt, Object emitter) {
        Stage.textUserInfo.text(emitter.toString());
+       if (emitter == p1) {
+         ((AbstractShapeDataVertex)s1.getData(1)).p(0).x(p1.x());
+         ((AbstractShapeDataVertex)s2.getData(0)).p(0).x(p1.x());
+       }
     }
   });
   
