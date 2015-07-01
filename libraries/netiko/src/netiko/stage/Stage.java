@@ -38,7 +38,8 @@ public class Stage  {
     public static float distMouseY = 0;
     protected static boolean mousePressed = false;
     protected static boolean mouseHoverOn = false;
-    protected static Object mouseHoverSetter = null;
+    protected static AbstractDraggable mouseHoverSetter = null;
+    protected static AbstractDraggable selectedDraggable = null;
 
     protected static ArrayList<IDrawable> drawables = new ArrayList<>();
     protected static ArrayList<IDrawable> stageWidgets = new ArrayList<>();
@@ -208,9 +209,13 @@ public class Stage  {
 
     public static int getTextColor() {return textColor; }
 
+    public static AbstractDraggable getSelectedDraggable() {
+        return selectedDraggable;
+    }
+
     // SECTION set stuff
 
-    public static void setHoverState(boolean on, Object setter) {
+    public static void setHoverState(boolean on, AbstractDraggable setter) {
         if (on && setter != mouseHoverSetter) {
             mouseHoverOn = true;
             mouseHoverSetter = setter;
@@ -220,6 +225,10 @@ public class Stage  {
             mouseHoverSetter = null;
             p.cursor(ARROW);
         }
+    }
+
+    public static void setSelectedDraggable(AbstractDraggable setter) {
+        selectedDraggable = setter;
     }
 
 

@@ -28,8 +28,8 @@ public class PointDraggable extends AbstractDraggable implements IPoint, IRadius
     }
 
     @Override
-    public void reactOnMouseHover(boolean isHover) {
-        if (isHover) {
+    public void setFocusState(boolean focused) {
+        if (focused) {
             point.setBgColor(Stage.getPointDraggableHoverColor());
         } else {
             point.resetBgColor();

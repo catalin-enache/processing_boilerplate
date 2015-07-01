@@ -38,9 +38,19 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
 
     @Override
     public void onEvent(Event evt, Object emitter) {
-        if (evt.name == Event.Name.mousePressed) {
-            if (p.mouseButton == LEFT && isPointInFigure(Stage.mouseX, Stage.mouseY)) {
+        if (evt.name == Event.Name.mousePressed && p.mouseButton == LEFT) {
+            if (isPointInFigure(Stage.mouseX, Stage.mouseY)) {
                 dragStarted = true;
+                if (Stage.getSelectedDraggable() != this) {
+                    Stage.setSelectedDraggable(this);
+                    Stage.emitEvent(new Event(Event.Name.draggableSelected, null), this);
+                }
+            }
+            else {
+                if (Stage.getSelectedDraggable() == this) {
+                    Stage.setSelectedDraggable(null);
+                    Stage.emitEvent(new Event(Event.Name.draggableSelected, null), null);
+                }
             }
         } else if (evt.name == Event.Name.mouseReleased) {
             dragStarted = false;
@@ -48,15 +58,26 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
         else if (evt.name == Event.Name.mouseMove) {
             checkMouseHover();
         }
+        checkWasSelected();
     }
 
     protected void checkMouseHover() {
         if (isPointInFigure(Stage.mouseX, Stage.mouseY)) {
             Stage.setHoverState(true, this);
-            reactOnMouseHover(true);
+            if (Stage.getSelectedDraggable() != this) {
+                setFocusState(true);
+            }
         } else {
             Stage.setHoverState(false, this);
-            reactOnMouseHover(false);
+            if (Stage.getSelectedDraggable() != this) {
+                setFocusState(false);
+            }
+        }
+    }
+
+    protected void checkWasSelected() {
+        if (Stage.getSelectedDraggable() == this) {
+            setFocusState(true);
         }
     }
 
@@ -85,8 +106,8 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
         return new IPoint[]{new PointVirtual(tl[0], tl[1]), new PointVirtual(tr[0], tr[1]), new PointVirtual(br[0], br[1]), new PointVirtual(bl[0], bl[1])};
     }
 
-    public void reactOnMouseHover(boolean isHover) {
-        if (!isHover) { return; }
+    public void setFocusState(boolean focused) {
+        if (!focused) { return; }
         IPoint[] boundingRect = boundingRect();
         if (boundingRect == null) { return; }
         IPoint tl = boundingRect[0];

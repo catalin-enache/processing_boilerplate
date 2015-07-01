@@ -4,7 +4,7 @@ import netiko.stage.Slider;
 import netiko.stage.IStageEventClient;
 import netiko.stage.Event;
 
-Slider sl1, sl2, sl3;
+Slider sl1, sl2, sl3, sl4;
 
 int w = 600;
 int h = 600;
@@ -17,10 +17,12 @@ void setup() {
     sl1 = Stage.slider(-200, 200, 8, -200, 200, -200, -200, true, 0, 0, -1, 1, 0, 0.1);
     sl2 = Stage.slider(0, -200, 8, 0, -200, 200, -200, true, -3, 3, 0, 0, 3, 0);
     sl3 = Stage.slider(150, 150, 8, 100, 200, 200, 100, true, -100, 100, -100, 100, 0, 0);
+    sl4 = Stage.slider(0, 0, 5, 0, 0, 0, 0, true, 0, 0, 0, 0, 0, 0);
   } else {
     sl1 = Stage.slider(100, 100, 8, 100, 100, 100, 400, true, 0, 0, -1, 1, 0, 0.1);
     sl2 = Stage.slider(w/2, 400, 8, w/2, 400, w/2+200, 400, true, -3, 3, 0, 0, 3, 0);
     sl3 = Stage.slider(350, 150, 8, 350, 150, 450, 250, true, -100, 100, -100, 100, 0, 0);
+    sl4 = Stage.slider(w/2, h/2, 5, w/2, h/2, w/2, h/2, true, 0, 0, 0, 0, 0, 0);
   }
   
   Stage.addEventClient(new IStageEventClient(){

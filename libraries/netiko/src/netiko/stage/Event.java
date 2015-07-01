@@ -7,7 +7,7 @@ import java.util.Map;
 public class Event {
     public Name name;
     public HashMap<String, Object> data;
-    public static enum Name { mousePressed, mouseReleased, mouseMove, draggableDragged, pointUpdated, shapeModified }
+    public static enum Name { mousePressed, mouseReleased, mouseMove, draggableDragged, pointUpdated, shapeModified, draggableSelected }
     protected String selfAsString;
 
     Event(Name name, HashMap<String, Object> data) {
