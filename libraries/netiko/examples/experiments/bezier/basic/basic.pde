@@ -1,6 +1,5 @@
 
 import netiko.stage.*;
-import netiko.math.Point;
 import netiko.math.*;
 
 int w = 600;
@@ -27,9 +26,9 @@ void draw() {
   Stage.startDraw();
   
   stroke(0);
-  ArrayList<Point> points = Util.generateBezierCurve(p0, p1, p2, p3, 0.1/sl1.rangeX());
+  ArrayList<MPoint> points = Util.generateBezierCurve(p0, p1, p2, p3, 0.1/sl1.rangeX());
   for (int i = 0; i < points.size(); i++) {
-    Point p = points.get(i);
+    MPoint p = points.get(i);
     point(p.x(), p.y());
   }
   

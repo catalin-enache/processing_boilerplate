@@ -1,11 +1,11 @@
 package netiko.math;
 
-public class Point implements IPoint {
+public class MPoint implements IPoint {
 
     private float x;
     private float y;
 
-    public Point (float x, float  y) {
+    public MPoint(float x, float y) {
         this.x = x;
         this.y = y;
     }

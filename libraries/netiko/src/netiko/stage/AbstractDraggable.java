@@ -135,8 +135,8 @@ public abstract class AbstractDraggable implements IPointInFigure, IDrawable {
             // simplest approach using mouse distance between previous frame and current frame
             float[] newCoords = getNewPosition(p);
             // (just a clarification)
-            // in case of Slider/PointDraggable being dragged: p is the wrapped Point (that was set in setFigurePoints())
-            // in case of ShapeDraggable being dragged: p might be PointVirtual, Point, PointDraggable, Slider (whatever was set in setFigurePoints())
+            // in case of Slider/PointDraggable being dragged: p is the wrapped MPoint (that was set in setFigurePoints())
+            // in case of ShapeDraggable being dragged: p might be PointVirtual, MPoint, PointDraggable, Slider (whatever was set in setFigurePoints())
             p.xy(newCoords[0], newCoords[1]);
         }
     }
