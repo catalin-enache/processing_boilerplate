@@ -1,9 +1,6 @@
 package netiko.stage;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class Slider extends PointDraggable {
 
     private float[] limits = new float[4];
@@ -40,7 +37,15 @@ public class Slider extends PointDraggable {
         this.rangeY = Math.abs(startRangeY - endRangeY);
         this.stepX = stepX;
         this.stepY = stepY;
+        setRangeValueXY();
         init();
+    }
+
+    protected void setRangeValueXY() {
+        rangeValueX = p.map(point.x(), limits[0], limits[2], startRangeX, endRangeX);
+        rangeValueY = p.map(point.y(), limits[1], limits[3], startRangeY, endRangeY);
+        if (Float.isNaN(rangeValueX)) { rangeValueX = 0; }
+        if (Float.isNaN(rangeValueY)) { rangeValueY = 0; }
     }
 
     // to be called whenever limits is updated (when Slider is part of a Shape controls and the Shape is dragged)
@@ -89,10 +94,7 @@ public class Slider extends PointDraggable {
 
     @Override
     protected void processPointUpdatedEvent(Event evt, Object emitter) {
-        rangeValueX = p.map(point.x(), limits[0], limits[2], startRangeX, endRangeX);
-        rangeValueY = p.map(point.y(), limits[1], limits[3], startRangeY, endRangeY);
-        if (Float.isNaN(rangeValueX)) { rangeValueX = 0; }
-        if (Float.isNaN(rangeValueY)) { rangeValueY = 0; }
+        setRangeValueXY();
         super.processPointUpdatedEvent(evt, emitter); // Shape might be interested
     }
 
@@ -167,6 +169,8 @@ public class Slider extends PointDraggable {
         }
         return newY;
     }
+
+
 
     public float rangeX() { return rangeValueX; }
     public float rangeY() { return rangeValueY; }
