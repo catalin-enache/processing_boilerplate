@@ -26,7 +26,7 @@ void draw() {
   Stage.startDraw();
   
   stroke(0);
-  ArrayList<MPoint> points = Util.generateBezierCurve(p0, p1, p2, p3, 0.1/sl1.rangeX());
+  ArrayList<MPoint> points = Util.generateBezierCurvePoints(p0, p1, p2, p3, 0.1/sl1.rangeX());
   for (int i = 0; i < points.size(); i++) {
     MPoint p = points.get(i);
     point(p.x(), p.y());
