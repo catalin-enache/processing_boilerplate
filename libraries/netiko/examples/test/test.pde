@@ -1,12 +1,11 @@
 void setup() {
-  size(640, 360);
-  // smooth() ;
+  size(640, 360, P2D);
+  smooth(8) ;
   // noSmooth();
   // noStroke();
   // noFill();
   
   fill(#16743C);
-  
 }
 
 void draw() {
