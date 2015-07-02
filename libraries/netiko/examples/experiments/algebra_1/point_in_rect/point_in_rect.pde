@@ -24,7 +24,7 @@ void setup() {
     }
     public void onEvent(Event evt, Object emitter) {
       if (emitter == P0 || emitter == P1 || emitter == P2) {
-        boolean y = Util.pointInRectOfTwoPoints(P0, P1, P2);
+        boolean y = Util.pointInRectOfTwoPoints(P0, P1, P2, 0);
         Stage.textUserInfo.text(String.format("%s", y));
       }
     }

@@ -36,6 +36,9 @@ public class Util {
         float leftX = xs.get(0) - margin;
         float rightX = xs.get(1) + margin;
         float bottomY, topY;
+        bottomY = ys.get(0) - margin;
+        topY = ys.get(1) + margin;
+        /*
         if (Stage.isCartezian) {
             bottomY = ys.get(0) - margin;
             topY = ys.get(1) + margin;
@@ -43,7 +46,7 @@ public class Util {
             bottomY = ys.get(0) + margin;
             topY = ys.get(1) - margin;
         }
-
+        */
         boolean ret = leftX <= p0.x() && p0.x() <= rightX && bottomY <= p0.y() &&  p0.y() <= topY;
         return ret;
     }
