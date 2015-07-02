@@ -26,7 +26,7 @@ public class Stage  {
     protected static int pointDraggableLimitsBgColor;
     protected static int boundingRectColor;
     protected static int textColor;
-    protected static boolean isCartezian;
+    public static boolean isCartezian;
 
     protected static Map<Event.Name, HashSet<IStageEventClient>> eventsRegister = new HashMap<>();
 

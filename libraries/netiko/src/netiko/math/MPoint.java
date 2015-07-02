@@ -22,4 +22,9 @@ public class MPoint implements IPoint {
 
     public float[] xy() { return new float[]{x, y}; }
 
+    @Override
+    public String toString() {
+        return String.format("MPoint: %f %f", x, y);
+    }
+
 }

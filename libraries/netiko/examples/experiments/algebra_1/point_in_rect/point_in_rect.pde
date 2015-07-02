@@ -4,24 +4,6 @@ import java.util.ArrayList;
 import netiko.math.*;
 import netiko.stage.*;
 
-/*
-import netiko.stage.Stage;
-
-import netiko.stage.Point;
-import netiko.stage.PointVirtual;
-import netiko.stage.PointDraggable;
-import netiko.stage.Slider;
-
-import netiko.stage.Shape;
-import netiko.stage.ShapeDraggable;
-import netiko.stage.AbstractShapeData;
-import netiko.stage.AbstractShapeDataVertex;
-import netiko.stage.ShapeDataLine;
-import netiko.stage.ShapeDataVertex;
-import netiko.stage.ShapeDataBezierVertex;
-import netiko.stage.ShapeDataQuadraticVertex;
-import netiko.stage.ShapeContour;
-*/
 import netiko.stage.IStageEventClient;
 import netiko.stage.Event;
 
@@ -61,5 +43,4 @@ void draw() {
   rect(P1.x(), P1.y(), P2.x(), P2.y());
   Stage.endDraw();
 }
-
 

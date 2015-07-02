@@ -85,7 +85,7 @@ public class Point extends PointVirtual implements IDrawable, IRadius {
 
     @Override
     public String toString() {
-        return String.format("MPoint: %.2f %.2f %.2f", x, y, r);
+        return String.format("Point: %.2f %.2f %.2f", x, y, r);
     }
 
 }
