@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import static processing.core.PConstants.*;
 
-// this class is a wrapper/proxy over a MPoint and is an IPoint itself
+// this class is a wrapper/proxy over a Point and is an IPoint itself
 public class PointDraggable extends AbstractDraggable implements IPoint, IRadius {
 
     protected Point point;
@@ -62,7 +62,7 @@ public class PointDraggable extends AbstractDraggable implements IPoint, IRadius
                 processPointUpdatedEvent(evt, emitter);
             }
         }
-        point.onEvent(evt, emitter); // forward all events | actually MPoint listens for its event to update its text info
+        point.onEvent(evt, emitter); // forward all events | actually Point listens for its event to update its text info
     }
 
     protected void processPointUpdatedEvent(Event evt, Object emitter) {
@@ -72,6 +72,14 @@ public class PointDraggable extends AbstractDraggable implements IPoint, IRadius
     @Override
     protected float[] getNewPosition(IPoint point) {
         return new float[] {Stage.mouseX, Stage.mouseY};
+    }
+
+    public void setBgColor(int color) {
+        point.setBgColor(color);
+    }
+
+    public void resetBgColor() {
+        point.resetBgColor();
     }
 
     @Override

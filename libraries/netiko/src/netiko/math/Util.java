@@ -21,22 +21,27 @@ public class Util {
         return MPoints;
     }
 
+    // helper to get margins for the value
+    public static float[] e(float value, float margin) {
+        return new float[]{value - margin, value + margin};
+    }
+
     /**
      * @param p0 point to check
      * @param p1 point defining one rect corner
      * @param p2 point defining the opposite rect corner
      * @return boolean weather p0 inside rect defined by p1 & p2
      */
-    public static boolean pointInRectOfTwoPoints(IPoint p0, IPoint p1, IPoint p2, float margin) {
+    public static boolean pointInRectOfTwoPoints(IPoint p0, IPoint p1, IPoint p2, float epsilon) {
         ArrayList<Float> xs = new ArrayList<>(Arrays.asList(p1.x(), p2.x()));
         Collections.sort(xs);
         ArrayList<Float> ys = new ArrayList<>(Arrays.asList(p1.y(), p2.y()));
         Collections.sort(ys);
 
-        float leftX = xs.get(0) - margin;
-        float rightX = xs.get(1) + margin;
-        float bottomY = ys.get(0) - margin;
-        float topY = ys.get(1) + margin;
+        float leftX = xs.get(0) - epsilon;
+        float rightX = xs.get(1) + epsilon;
+        float bottomY = ys.get(0) - epsilon;
+        float topY = ys.get(1) + epsilon;
 
         boolean ret = leftX <= p0.x() && p0.x() <= rightX && bottomY <= p0.y() &&  p0.y() <= topY;
         return ret;
@@ -88,6 +93,7 @@ public class Util {
      */
     public static IPoint lineSystemOfEquationsOfSlopeInterceptForm(float m1, float x1, float b1, float m2, float x2, float b2) {
         float x, y;
+        // TODO: what if m is NaN ?
         if (m1 == 0 && m2 == 0){ // if both lines are horizontal
             return null;
         } else if (m1 == Float.POSITIVE_INFINITY && m2 == Float.POSITIVE_INFINITY) { // if both lines are vertical
@@ -136,6 +142,44 @@ public class Util {
             }
         }
         return null;
+    }
+
+    /**
+     * find equation of line
+     * put p.x in this equation and check if test y ~ p.y
+     * @param p
+     * @param lineP1
+     * @param lineP2
+     * @return
+     */
+    public static boolean intersectionPointLine(IPoint p, IPoint lineP1, IPoint lineP2, boolean segment, float epsilon) {
+        float m = lineSlopeFromTwoPoints(lineP1, lineP2);
+        float b = lineYInterceptPointSlope(lineP1, m);
+        boolean test = false;
+
+        if (m == Float.POSITIVE_INFINITY) { // if line is vertical
+            // in theory testing if p.x() == lineP1.x() or p.x() == lineP2.x() should be enough but ...
+            float[] x00_x01 = e(lineP1.x(), epsilon);
+            float x00 = x00_x01[0];
+            float x01 = x00_x01[1];
+            test = x00 <= p.x() && p.x() <= x01;
+        } else {
+            float yTest = m * p.x() + b; // in theory testing if p.y() == yTest should be enough but ...
+            float _epsilon = epsilon;
+            if (m > 1 || m < -1) { // as m tends to infinity
+                _epsilon = epsilon * Math.abs(m); // m tends to infinity as line tends toward vertical. so, we have to increase the epsilon margin because very small x changes result in big yTest changes and a fixed margin would not fit.
+            }
+            float[] y00_y01 = e(yTest, _epsilon);
+            float y00 = y00_y01[0];
+            float y01 = y00_y01[1];
+            test = y00 < p.y() && p.y() < y01;
+        }
+
+        if (!segment) {
+            return test;
+        } else { // check if point on segment
+            return test && pointInRectOfTwoPoints(p, lineP1, lineP2, epsilon);
+        }
     }
 
 }

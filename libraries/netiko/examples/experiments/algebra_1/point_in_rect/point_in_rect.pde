@@ -24,13 +24,18 @@ void setup() {
     }
     public void onEvent(Event evt, Object emitter) {
       if (emitter == P0 || emitter == P1 || emitter == P2) {
-        boolean y = Util.pointInRectOfTwoPoints(P0, P1, P2, 0);
-        Stage.textUserInfo.text(String.format("%s", y));
-      }
+        boolean test = Util.pointInRectOfTwoPoints(P0, P1, P2, 0);
+        if (test) {
+          P0.setBgColor(color(255,0,0,255));
+        } else {
+          P0.resetBgColor();
+        }
+        Stage.textUserInfo.text(String.format("%s", test));
+      } 
     }
   });
   
-  P0 = Stage.pointDraggable(50, 50);
+  P0 = Stage.pointDraggable(50, 50, 8);
   P1 = Stage.pointDraggable(0, 0);
   P2 = Stage.pointDraggable(150, 150);
   
