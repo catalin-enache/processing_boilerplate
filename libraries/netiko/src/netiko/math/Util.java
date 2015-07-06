@@ -172,7 +172,7 @@ public class Util {
             float[] y00_y01 = e(yTest, _epsilon);
             float y00 = y00_y01[0];
             float y01 = y00_y01[1];
-            test = y00 < p.y() && p.y() < y01;
+            test = y00 <= p.y() && p.y() <= y01;
         }
 
         if (!segment) {
